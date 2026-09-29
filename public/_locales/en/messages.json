@@ -357,5 +357,67 @@
         "content": "$2"
       }
     }
+  },
+  "sectionStyle": {
+    "message": "Style"
+  },
+  "styleHint": {
+    "message": "Tells the model how the translation should sound."
+  },
+  "styleAuto": {
+    "message": "Automatic (the model decides)"
+  },
+  "styleFormal": {
+    "message": "Formal"
+  },
+  "styleCasual": {
+    "message": "Casual"
+  },
+  "styleTechnical": {
+    "message": "Technical"
+  },
+  "styleCustom": {
+    "message": "Custom…"
+  },
+  "styleCustomPlaceholder": {
+    "message": "e.g. short and plain, like a chat message"
+  },
+  "sectionGlossary": {
+    "message": "Glossary"
+  },
+  "glossaryHint": {
+    "message": "Terms that must always be translated the same way. Each pair works in both directions, and only terms found in the selected text are sent to the model."
+  },
+  "glossaryAdd": {
+    "message": "Add term"
+  },
+  "glossaryRemove": {
+    "message": "Remove"
+  },
+  "glossaryEmpty": {
+    "message": "No terms yet."
+  },
+  "glossaryTermPlaceholder": {
+    "message": "term"
+  },
+  "glossaryCount": {
+    "message": "$COUNT$ of $MAX$ terms",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "max": {
+        "content": "$2"
+      }
+    }
+  },
+  "glossaryFull": {
+    "message": "The glossary is full. Remove terms to add new ones."
+  },
+  "extrasUnsupported": {
+    "message": "The current model (TranslateGemma) ignores the glossary and style."
+  },
+  "popupStyle": {
+    "message": "Style"
   }
 }

@@ -13,7 +13,9 @@
     updateProviderSettings,
     type Prefs,
   } from '@/lib/settings';
+  import type { StyleId } from '@/lib/style';
   import LanguageSelect from '@/lib/ui/LanguageSelect.svelte';
+  import StyleSelect from '@/lib/ui/StyleSelect.svelte';
   import { activeProfile, providerChoices } from '@/lib/ui/providers';
 
   let prefs = $state<Prefs>(DEFAULT_PREFS);
@@ -98,6 +100,12 @@
       <span class="hint">{t('popupNothingConfigured')}</span>
     {/if}
   </label>
+
+  <StyleSelect
+    label={t('popupStyle')}
+    value={prefs.style}
+    onchange={(style: StyleId) => save({ style })}
+  />
 
   {#if prefs.selectionIcon && site}
     <label class="check">

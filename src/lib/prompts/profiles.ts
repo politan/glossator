@@ -1,3 +1,4 @@
+import type { Term } from '../glossary';
 import { englishName, translateGemmaCode, type LanguageCode } from '../languages';
 import type { PromptProfileId } from './profile-id';
 
@@ -15,6 +16,10 @@ export interface TranslationPrompt {
   target: LanguageCode;
   /** Surrounding Context, only present when the user opted in. */
   context?: string;
+  /** Glossary terms that occur in the text. */
+  terms?: readonly Term[];
+  /** Description of the Style, e.g. "formal"; absent for automatic. */
+  style?: string;
 }
 
 export function resolvePromptProfile(
@@ -46,12 +51,36 @@ export function buildMessages(profile: PromptProfileId, prompt: TranslationPromp
 }
 
 // Templates from the Hy-MT2 model card. The model has no system prompt.
-function hyMt({ text, target, context }: TranslationPrompt): ChatMessage[] {
+// Each feature has its own template on the Hy-MT2 model card; used alone,
+// the prompt matches the card exactly. The card has no combined template, so
+// combinations stack the parts: terms, background, instruction, text.
+function hyMt({ text, target, context, terms = [], style }: TranslationPrompt): ChatMessage[] {
   const targetName = englishName(target);
-  const content = context
-    ? `[Background Information]\n${context}\n\nPlease translate the following text into ${targetName}, taking the provided background information into consideration.\n\n[Source Text]\n${text}`
-    : `Translate the following text into ${targetName}. Note that you should only output the translated result without any additional explanation:\n\n${text}`;
-  return [{ role: 'user', content }];
+  const parts: string[] = [];
+  if (terms.length > 0) {
+    const lines = terms.map((t) => `${t.source} translates to ${t.target}`);
+    parts.push(`Reference the following translations:\n${lines.join('\n')}`);
+  }
+  if (context) parts.push(`[Background Information]\n${context}`);
+  const styleNote = style
+    ? ` Note that the translation style must strictly conform to [${style}]`
+    : '';
+  if (context) {
+    parts.push(
+      `Please translate the following text into ${targetName}, taking the provided background information into consideration.${styleNote ? `${styleNote}.` : ''}\n\n[Source Text]\n${text}`,
+    );
+  } else if (style) {
+    parts.push(`Please translate the following text into ${targetName}.${styleNote}:\n\n${text}`);
+  } else if (terms.length > 0) {
+    parts.push(
+      `Translate the following text into ${targetName}. Note that you must ONLY output the translated result without any additional explanation:\n\n${text}`,
+    );
+  } else {
+    parts.push(
+      `Translate the following text into ${targetName}. Note that you should only output the translated result without any additional explanation:\n\n${text}`,
+    );
+  }
+  return [{ role: 'user', content: parts.join('\n\n') }];
 }
 
 // Template from https://ollama.com/library/translategemma (two blank lines
@@ -79,7 +108,14 @@ function translateGemma({ text, source, target }: TranslationPrompt): ChatMessag
   ];
 }
 
-function generic({ text, source, target, context }: TranslationPrompt): ChatMessage[] {
+function generic({
+  text,
+  source,
+  target,
+  context,
+  terms = [],
+  style,
+}: TranslationPrompt): ChatMessage[] {
   const targetName = englishName(target);
   const direction = source
     ? `from ${englishName(source)} into ${targetName}`
@@ -87,8 +123,17 @@ function generic({ text, source, target, context }: TranslationPrompt): ChatMess
   const lines = [
     `You are a professional translator. Translate the user's message ${direction}.`,
     'Reply with only the translation: no explanations, notes, quotation marks or preamble.',
-    'Keep the original formatting, line breaks and tone.',
+    style
+      ? `Keep the original formatting and line breaks, and write the translation in this style: ${style}.`
+      : 'Keep the original formatting, line breaks and tone.',
   ];
+  if (terms.length > 0) {
+    lines.push(
+      '',
+      'Always translate these terms exactly as given:',
+      ...terms.map((t) => `- ${t.source} → ${t.target}`),
+    );
+  }
   if (context) {
     lines.push(
       '',

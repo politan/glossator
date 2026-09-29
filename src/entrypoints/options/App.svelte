@@ -22,6 +22,9 @@
   import LanguageSelect from '@/lib/ui/LanguageSelect.svelte';
   import { failureText } from '@/lib/ui/errors';
   import { activeProfile, providerChoices } from '@/lib/ui/providers';
+  import type { StyleId } from '@/lib/style';
+  import StyleSelect from '@/lib/ui/StyleSelect.svelte';
+  import GlossarySection from './GlossarySection.svelte';
   import LocalProviderCard from './LocalProviderCard.svelte';
 
   const CUSTOM_MODEL = '__custom__';
@@ -344,6 +347,39 @@
         <span class="hint">{t('surroundingContextHint')}</span>
       </span>
     </label>
+  </section>
+
+  <section>
+    <h2>{t('sectionStyle')}</h2>
+    <p class="hint">{t('styleHint')}</p>
+    {#if profile === 'translategemma'}
+      <p class="status error">{t('extrasUnsupported')}</p>
+    {/if}
+    <div class="languages">
+      <StyleSelect
+        label={t('sectionStyle')}
+        value={prefs.style}
+        onchange={(style: StyleId) => savePrefs({ style })}
+      />
+      {#if prefs.style === 'custom'}
+        <label>
+          <span class="field-label">{t('styleCustom')}</span>
+          <input
+            value={prefs.customStyle}
+            placeholder={t('styleCustomPlaceholder')}
+            onchange={(e) => savePrefs({ customStyle: e.currentTarget.value.trim() })}
+          />
+        </label>
+      {/if}
+    </div>
+  </section>
+
+  <section>
+    <h2>{t('sectionGlossary')}</h2>
+    <p class="hint">{t('glossaryHint')}</p>
+    {#if loaded}
+      <GlossarySection target={prefs.target} />
+    {/if}
   </section>
 
   <section>

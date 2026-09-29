@@ -1,5 +1,6 @@
 import { storage } from 'wxt/utils/storage';
 import type { LanguagePrefs } from './pair';
+import type { StyleId } from './style';
 import { DEFAULT_OPENROUTER_MODEL } from './providers/openrouter';
 import type { CloudProvider, LocalProvider, Provider } from './providers/types';
 
@@ -9,6 +10,9 @@ export interface Prefs extends LanguagePrefs {
   selectionIcon: boolean;
   /** Hostnames where the Selection Icon stays hidden. */
   disabledSites: string[];
+  style: StyleId;
+  /** The user's own Style description, used when `style` is `custom`. */
+  customStyle: string;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -18,6 +22,8 @@ export const DEFAULT_PREFS: Prefs = {
   useSurroundingContext: false,
   selectionIcon: true,
   disabledSites: [],
+  style: 'auto',
+  customStyle: '',
 };
 
 /** Providers hold API Keys, so they stay on this device (ADR 0001). */
