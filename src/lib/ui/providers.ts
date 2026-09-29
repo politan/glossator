@@ -1,4 +1,4 @@
-import { resolvePromptProfile, type PromptProfileId } from '../prompts/profiles';
+import { profileOf, type PromptProfileId } from '../prompts/profiles';
 import { privacyOf } from '../providers/privacy';
 import { activeProvider, findProvider, providerName, type ProviderSettings } from '../settings';
 import { badgeLabel } from './badge';
@@ -27,5 +27,5 @@ export function providerChoices(settings: ProviderSettings): ProviderChoice[] {
 /** The Prompt Profile of the active Provider, which decides the language list. */
 export function activeProfile(settings: ProviderSettings): PromptProfileId {
   const provider = activeProvider(settings);
-  return provider ? resolvePromptProfile(provider.model, provider.promptProfile) : 'generic';
+  return provider ? profileOf(provider) : 'generic';
 }

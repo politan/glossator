@@ -1,8 +1,8 @@
 import { browser } from 'wxt/browser';
+import { ALL_SITES } from './all-sites';
 
 const SCRIPT_ID = 'glossa-selection-icon';
 export const CONTENT_SCRIPT_FILE = '/content-scripts/content.js';
-export const ALL_SITES = ['http://*/*', 'https://*/*'];
 
 export function hasAllSitesAccess(): Promise<boolean> {
   return browser.permissions.contains({ origins: ALL_SITES });

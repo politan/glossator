@@ -98,7 +98,7 @@
     "message": "Spróbuj przez OpenRouter (wyśle tekst do chmury)"
   },
   "languageAuto": {
-    "message": "Wykryj język"
+    "message": "Auto (wykryj język)"
   },
   "popupFrom": {
     "message": "Z"

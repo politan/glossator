@@ -1,28 +1,31 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { browser } from 'wxt/browser';
-  import { ALL_SITES } from '@/lib/content-script-registration';
+  import { ALL_SITES } from '@/lib/all-sites';
   import { t, uiLocale } from '@/lib/i18n';
   import { isSupported, languageName, languagesFor } from '@/lib/languages';
   import { PROMPT_PROFILES } from '@/lib/prompts/profiles';
   import { OPENROUTER_MODELS } from '@/lib/providers/openrouter';
   import { PRESETS } from '@/lib/providers/presets';
-  import type { LocalProvider } from '@/lib/providers/types';
+  import type { CloudProvider, LocalProvider } from '@/lib/providers/types';
   import {
     DEFAULT_PREFS,
     DEFAULT_PROVIDER_SETTINGS,
     loadPrefs,
+    prefsItem,
     providersItem,
     updatePrefs,
+    updateProviderSettings,
     type Prefs,
     type ProviderSettings,
   } from '@/lib/settings';
   import { TranslationError, checkOpenRouterKey } from '@/lib/translation/client';
+  import LanguageSelect from '@/lib/ui/LanguageSelect.svelte';
   import { failureText } from '@/lib/ui/errors';
   import { activeProfile, providerChoices } from '@/lib/ui/providers';
-  import LocalServer from './LocalServer.svelte';
+  import LocalProviderCard from './LocalProviderCard.svelte';
 
-  const CUSTOM = '__custom__';
+  const CUSTOM_MODEL = '__custom__';
 
   let prefs = $state<Prefs>(DEFAULT_PREFS);
   let settings = $state<ProviderSettings>(DEFAULT_PROVIDER_SETTINGS);
@@ -30,7 +33,7 @@
   let apiKey = $state('');
   let keyStatus = $state<{ ok: boolean; text: string } | null>(null);
   let checkingKey = $state(false);
-  let customModel = $state(false);
+  let customModelChosen = $state(false);
 
   const choices = $derived(providerChoices(settings));
   const profile = $derived(activeProfile(settings));
@@ -38,32 +41,56 @@
   const unsupported = $derived(
     [prefs.target, prefs.fallback].filter((code) => !isSupported(profile, code)),
   );
+  const curatedModel = $derived(OPENROUTER_MODELS.some((m) => m.id === settings.cloud.model));
   const modelSelectValue = $derived(
-    customModel || !OPENROUTER_MODELS.some((m) => m.id === settings.cloud.model)
-      ? CUSTOM
-      : settings.cloud.model,
+    customModelChosen || !curatedModel ? CUSTOM_MODEL : settings.cloud.model,
   );
 
-  onMount(async () => {
-    prefs = await loadPrefs();
-    settings = await providersItem.getValue();
-    apiKey = settings.cloud.apiKey;
-    loaded = true;
+  onMount(() => {
+    void (async () => {
+      prefs = await loadPrefs();
+      settings = await providersItem.getValue();
+      apiKey = settings.cloud.apiKey;
+      loaded = true;
+    })();
+    // Stay in sync with changes made in the Toolbar Popup.
+    const unwatchProviders = providersItem.watch((value) => (settings = value));
+    const unwatchPrefs = prefsItem.watch((value) => (prefs = { ...DEFAULT_PREFS, ...value }));
+    return () => {
+      unwatchProviders();
+      unwatchPrefs();
+    };
   });
 
-  async function saveSettings(next: ProviderSettings) {
-    // The first working Provider becomes the active one.
-    const firstChoice = providerChoices(next)[0];
-    if (!next.activeProviderId && firstChoice) next.activeProviderId = firstChoice.id;
-    settings = next;
-    await providersItem.setValue($state.snapshot(settings));
+  /**
+   * Saves a change. A Provider the user just set up becomes active only when
+   * nothing is active yet; Glossa never picks one on its own (ADR 0002).
+   */
+  async function saveSettings(
+    change: (current: ProviderSettings) => ProviderSettings,
+    setUp?: string,
+  ) {
+    settings = await updateProviderSettings((current) => {
+      const next = change(current);
+      const usable = providerChoices(next).some((c) => c.id === setUp);
+      return setUp && usable && !next.activeProviderId
+        ? { ...next, activeProviderId: setUp }
+        : next;
+    });
+  }
+
+  function updateCloud(change: Partial<CloudProvider>, setUp?: string) {
+    return saveSettings(
+      (current) => ({ ...current, cloud: { ...current.cloud, ...change } }),
+      setUp,
+    );
   }
 
   async function savePrefs(change: Partial<Prefs>) {
     prefs = await updatePrefs(change);
   }
 
-  function value(event: Event): string {
+  function inputValue(event: Event): string {
     return (event.currentTarget as HTMLSelectElement | HTMLInputElement).value;
   }
 
@@ -79,7 +106,7 @@
             ? t('cloudKeyOkUnlimited')
             : t('cloudKeyOk', `$${status.limitRemaining.toFixed(2)}`),
       };
-      await saveSettings({ ...settings, cloud: { ...settings.cloud, apiKey: apiKey.trim() } });
+      await updateCloud({ apiKey: apiKey.trim() }, settings.cloud.id);
     } catch (error) {
       keyStatus = {
         ok: false,
@@ -91,15 +118,15 @@
   }
 
   async function chooseModel(event: Event) {
-    const model = value(event);
-    customModel = model === CUSTOM;
-    if (!customModel) await saveSettings({ ...settings, cloud: { ...settings.cloud, model } });
+    const model = inputValue(event);
+    customModelChosen = model === CUSTOM_MODEL;
+    if (!customModelChosen) await updateCloud({ model });
   }
 
-  async function addServer() {
+  async function addLocalProvider() {
     const preset = PRESETS[0];
     if (!preset) return;
-    const server: LocalProvider = {
+    const provider: LocalProvider = {
       kind: 'local',
       id: crypto.randomUUID(),
       name: preset.label,
@@ -109,36 +136,44 @@
       model: '',
       promptProfile: 'auto',
     };
-    await saveSettings({ ...settings, locals: [...settings.locals, server] });
+    await saveSettings((current) => ({ ...current, locals: [...current.locals, provider] }));
   }
 
-  async function saveServer(server: LocalProvider) {
-    await saveSettings({
-      ...settings,
-      locals: settings.locals.map((s) => (s.id === server.id ? server : s)),
-    });
+  async function saveLocalProvider(provider: LocalProvider) {
+    await saveSettings(
+      (current) => ({
+        ...current,
+        locals: current.locals.map((p) => (p.id === provider.id ? provider : p)),
+      }),
+      provider.id,
+    );
   }
 
-  async function removeServer(id: string) {
-    await saveSettings({
-      ...settings,
-      activeProviderId: settings.activeProviderId === id ? null : settings.activeProviderId,
-      locals: settings.locals.filter((s) => s.id !== id),
-    });
+  async function removeLocalProvider(id: string) {
+    await saveSettings((current) => ({
+      ...current,
+      activeProviderId: current.activeProviderId === id ? null : current.activeProviderId,
+      locals: current.locals.filter((p) => p.id !== id),
+    }));
   }
 
   async function toggleSelectionIcon(event: Event) {
-    const enabled = (event.currentTarget as HTMLInputElement).checked;
+    const checkbox = event.currentTarget as HTMLInputElement;
+    const enabled = checkbox.checked;
     if (enabled && !(await browser.permissions.request({ origins: ALL_SITES }))) {
-      (event.currentTarget as HTMLInputElement).checked = false;
+      checkbox.checked = false;
       return;
     }
-    if (!enabled) await browser.permissions.remove({ origins: ALL_SITES });
+    // A Local Provider outside localhost may rely on the same grant, so keep it then.
+    const needsGrant = settings.locals.some(
+      (p) => !/^https?:\/\/(localhost|127\.0\.0\.1)[:/]/.test(p.baseUrl),
+    );
+    if (!enabled && !needsGrant) await browser.permissions.remove({ origins: ALL_SITES });
     await savePrefs({ selectionIcon: enabled });
   }
 
   async function startWith(kind: 'local' | 'cloud') {
-    if (kind === 'local' && settings.locals.length === 0) await addServer();
+    if (kind === 'local' && settings.locals.length === 0) await addLocalProvider();
     await tick();
     document.getElementById(kind)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -166,6 +201,13 @@
           <span class="cta">{t('onboardingChoose')} →</span>
         </button>
       </div>
+      <label class="check">
+        <input type="checkbox" checked={prefs.selectionIcon} onchange={toggleSelectionIcon} />
+        <span>
+          {t('selectionIconToggle')}
+          <span class="hint">{t('selectionIconHint')}</span>
+        </span>
+      </label>
     </section>
   {/if}
 
@@ -174,7 +216,8 @@
     {#if choices.length > 0}
       <select
         value={settings.activeProviderId}
-        onchange={(e) => saveSettings({ ...settings, activeProviderId: value(e) })}
+        onchange={(e) =>
+          saveSettings((current) => ({ ...current, activeProviderId: e.currentTarget.value }))}
       >
         {#each choices as choice (choice.id)}
           <option value={choice.id}>{choice.label}</option>
@@ -189,11 +232,15 @@
   <section id="local">
     <h2>{t('sectionLocal')}</h2>
     <p class="hint">{t('localHint')}</p>
-    {#each settings.locals as server (server.id)}
-      <LocalServer {server} onsave={saveServer} onremove={() => removeServer(server.id)} />
+    {#each settings.locals as provider (provider.id)}
+      <LocalProviderCard
+        {provider}
+        onsave={saveLocalProvider}
+        onremove={() => removeLocalProvider(provider.id)}
+      />
     {/each}
     <div>
-      <button type="button" onclick={addServer}>+ {t('localAdd')}</button>
+      <button type="button" onclick={addLocalProvider}>+ {t('localAdd')}</button>
     </div>
   </section>
 
@@ -225,19 +272,16 @@
         {#each OPENROUTER_MODELS as model (model.id)}
           <option value={model.id}>{model.id} ({t(model.noteKey)})</option>
         {/each}
-        <option value={CUSTOM}>{t('cloudModelCustom')}</option>
+        <option value={CUSTOM_MODEL}>{t('cloudModelCustom')}</option>
       </select>
     </label>
-    {#if modelSelectValue === CUSTOM}
+    {#if modelSelectValue === CUSTOM_MODEL}
       <label>
         <input
-          value={OPENROUTER_MODELS.some((m) => m.id === settings.cloud.model)
-            ? ''
-            : settings.cloud.model}
+          value={curatedModel ? '' : settings.cloud.model}
           placeholder="vendor/model"
           spellcheck="false"
-          onchange={(e) =>
-            saveSettings({ ...settings, cloud: { ...settings.cloud, model: value(e).trim() } })}
+          onchange={(e) => updateCloud({ model: e.currentTarget.value.trim() })}
         />
         <span class="hint">{t('cloudModelCustomHint')}</span>
       </label>
@@ -248,12 +292,8 @@
       <select
         value={settings.cloud.promptProfile}
         onchange={(e) =>
-          saveSettings({
-            ...settings,
-            cloud: {
-              ...settings.cloud,
-              promptProfile: value(e) as typeof settings.cloud.promptProfile,
-            },
+          updateCloud({
+            promptProfile: inputValue(e) as CloudProvider['promptProfile'],
           })}
       >
         <option value="auto">{t('promptProfileAuto')}</option>
@@ -267,11 +307,7 @@
       <input
         type="checkbox"
         checked={settings.cloud.strictPrivacy}
-        onchange={(e) =>
-          saveSettings({
-            ...settings,
-            cloud: { ...settings.cloud, strictPrivacy: e.currentTarget.checked },
-          })}
+        onchange={(e) => updateCloud({ strictPrivacy: e.currentTarget.checked })}
       />
       <span>
         {t('cloudStrictPrivacy')}
@@ -283,32 +319,26 @@
   <section>
     <h2>{t('sectionLanguages')}</h2>
     <div class="languages">
-      <label>
-        <span class="field-label">{t('languagesSource')}</span>
-        <select value={prefs.source} onchange={(e) => savePrefs({ source: value(e) })}>
-          <option value="auto">{t('languageAuto')}</option>
-          {#each languages as language (language.code)}
-            <option value={language.code}>{language.name}</option>
-          {/each}
-        </select>
-      </label>
-      <label>
-        <span class="field-label">{t('languagesTarget')}</span>
-        <select value={prefs.target} onchange={(e) => savePrefs({ target: value(e) })}>
-          {#each languages as language (language.code)}
-            <option value={language.code}>{language.name}</option>
-          {/each}
-        </select>
-      </label>
+      <LanguageSelect
+        label={t('languagesSource')}
+        value={prefs.source}
+        {languages}
+        autoLabel={t('languageAuto')}
+        onchange={(source: string) => savePrefs({ source })}
+      />
+      <LanguageSelect
+        label={t('languagesTarget')}
+        value={prefs.target}
+        {languages}
+        onchange={(target: string) => savePrefs({ target })}
+      />
       {#if prefs.source === 'auto'}
-        <label>
-          <span class="field-label">{t('languagesFallback')}</span>
-          <select value={prefs.fallback} onchange={(e) => savePrefs({ fallback: value(e) })}>
-            {#each languages as language (language.code)}
-              <option value={language.code}>{language.name}</option>
-            {/each}
-          </select>
-        </label>
+        <LanguageSelect
+          label={t('languagesFallback')}
+          value={prefs.fallback}
+          {languages}
+          onchange={(fallback: string) => savePrefs({ fallback })}
+        />
       {/if}
     </div>
     {#each unsupported as code (code)}

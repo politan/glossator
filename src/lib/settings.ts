@@ -56,6 +56,15 @@ export async function updatePrefs(change: Partial<Prefs>): Promise<Prefs> {
   return next;
 }
 
+/** Read-modify-write, so pages open side by side do not overwrite each other's changes. */
+export async function updateProviderSettings(
+  change: (current: ProviderSettings) => ProviderSettings,
+): Promise<ProviderSettings> {
+  const next = change(await providersItem.getValue());
+  await providersItem.setValue(next);
+  return next;
+}
+
 export function findProvider(settings: ProviderSettings, id: string | null): Provider | null {
   if (id === settings.cloud.id) return settings.cloud.apiKey ? settings.cloud : null;
   return settings.locals.find((p) => p.id === id && p.model) ?? null;

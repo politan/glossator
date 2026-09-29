@@ -142,8 +142,8 @@
 
   <footer>
     {#if meta}
-      <span class="badge" class:local={meta.privacy !== 'cloud'}>
-        {#if meta.privacy !== 'cloud'}
+      <span class="badge" class:local={meta.privacy === 'local'}>
+        {#if meta.privacy === 'local'}
           <svg viewBox="0 0 16 16" aria-hidden="true">
             <path d="M8 1.5l5 2v4c0 3.2-2.1 5.7-5 7-2.9-1.3-5-3.8-5-7v-4z" />
           </svg>

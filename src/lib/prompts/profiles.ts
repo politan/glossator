@@ -27,6 +27,13 @@ export function resolvePromptProfile(
   return 'generic';
 }
 
+export function profileOf(provider: {
+  model: string;
+  promptProfile: PromptProfileId | 'auto';
+}): PromptProfileId {
+  return resolvePromptProfile(provider.model, provider.promptProfile);
+}
+
 export function buildMessages(profile: PromptProfileId, prompt: TranslationPrompt): ChatMessage[] {
   switch (profile) {
     case 'hy-mt':

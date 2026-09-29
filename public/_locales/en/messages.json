@@ -98,7 +98,7 @@
     "message": "Try via OpenRouter (sends the text to the cloud)"
   },
   "languageAuto": {
-    "message": "Detect language"
+    "message": "Auto (detect language)"
   },
   "popupFrom": {
     "message": "From"

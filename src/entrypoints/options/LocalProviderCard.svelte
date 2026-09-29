@@ -4,27 +4,30 @@
   import { t } from '@/lib/i18n';
   import { PROMPT_PROFILES } from '@/lib/prompts/profiles';
   import { PRESETS, RECOMMENDED_LOCAL_MODELS, presetById } from '@/lib/providers/presets';
+  import { syncOriginRules } from '@/lib/providers/origin-sync';
   import { privacyOf } from '@/lib/providers/privacy';
   import type { LocalProvider, PresetId } from '@/lib/providers/types';
   import { TranslationError, listModels } from '@/lib/translation/client';
   import { badgeLabel } from '@/lib/ui/badge';
   import { failureText } from '@/lib/ui/errors';
+  import { providersItem } from '@/lib/settings';
 
   interface Props {
-    server: LocalProvider;
+    provider: LocalProvider;
     onsave: (server: LocalProvider) => Promise<void>;
     onremove: () => Promise<void>;
   }
 
-  const { server, onsave, onremove }: Props = $props();
+  const { provider, onsave, onremove }: Props = $props();
 
   // Edited locally until saved, so a half-typed address is never used.
-  let draft = $state<LocalProvider>(untrack(() => ({ ...server })));
+  let draft = $state<LocalProvider>(untrack(() => ({ ...provider })));
   let status = $state<{ ok: boolean; text: string } | null>(null);
   let testing = $state(false);
   let serverModels = $state<string[]>([]);
 
   const preset = $derived(presetById(draft.preset));
+  const privacy = $derived(privacyOf(draft));
   const modelSuggestions = $derived([...new Set([...serverModels, ...RECOMMENDED_LOCAL_MODELS])]);
   const listId = $derived(`models-${draft.id}`);
 
@@ -59,6 +62,9 @@
     testing = true;
     status = null;
     try {
+      // The address may not be saved yet; give it an Origin rule now (ADR 0003).
+      const saved = await providersItem.getValue();
+      await syncOriginRules([...saved.locals.map((p) => p.baseUrl), draft.baseUrl]);
       serverModels = await listModels($state.snapshot(draft));
       status =
         draft.model && !serverModels.includes(draft.model)
@@ -85,7 +91,7 @@
 <article>
   <header>
     <strong>{draft.name || preset.label}</strong>
-    <span class="badge">{badgeLabel(privacyOf(draft), draft.name)}</span>
+    <span class="badge" class:local={privacy === 'local'}>{badgeLabel(privacy, draft.name)}</span>
   </header>
 
   <div class="grid">
@@ -169,6 +175,11 @@
     font-size: 12px;
     padding: 1px 8px;
     border-radius: 999px;
+    background: var(--g-cloud-bg);
+    color: var(--g-text-muted);
+  }
+
+  .badge.local {
     background: var(--g-local-bg);
     color: var(--g-local);
   }

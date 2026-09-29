@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
 import type { TranslateEvent, TranslateRequest } from './messages';
 import { isSelectionTooLong, resolveLanguagePair, type LanguagePair } from './pair';
-import { buildMessages, resolvePromptProfile } from './prompts/profiles';
+import { buildMessages, profileOf } from './prompts/profiles';
 import { privacyOf } from './providers/privacy';
 import type { Provider } from './providers/types';
 import { activeProvider, loadPrefs, providerName, providersItem } from './settings';
@@ -53,7 +53,7 @@ export async function runTranslation(
     request.target ? { ...prefs, target: request.target, fallback: request.target } : prefs,
     detected,
   );
-  const profile = resolvePromptProfile(provider.model, provider.promptProfile);
+  const profile = profileOf(provider);
   const context = prefs.useSurroundingContext ? request.context : null;
 
   emit({
@@ -96,11 +96,16 @@ export async function runTranslation(
   emit({ type: 'done' });
 }
 
+// Short selections, the usual case, rarely come back as "reliable", but a
+// dominant guess is still right far more often than not.
+const CONFIDENT_PERCENTAGE = 80;
+
 async function detectLanguage(text: string): Promise<string | null> {
   try {
     const result = await browser.i18n.detectLanguage(text);
     const top = result.languages[0];
-    return result.isReliable && top ? top.language : null;
+    if (!top || top.language === 'und') return null;
+    return result.isReliable || top.percentage >= CONFIDENT_PERCENTAGE ? top.language : null;
   } catch {
     return null;
   }

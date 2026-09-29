@@ -1,6 +1,5 @@
 import { defineConfig } from 'wxt';
-
-const ALL_SITES = ['http://*/*', 'https://*/*'];
+import { ALL_SITES } from './src/lib/all-sites';
 
 export default defineConfig({
   srcDir: 'src',

@@ -1,7 +1,8 @@
-import { browser, type Browser } from 'wxt/browser';
+import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
 import {
   CONTENT_SCRIPT_FILE,
+  hasAllSitesAccess,
   syncSelectionIconRegistration,
 } from '@/lib/content-script-registration';
 import {
@@ -11,7 +12,7 @@ import {
   type ShowBubbleMessage,
   type TranslateRequest,
 } from '@/lib/messages';
-import { originRules } from '@/lib/providers/origin-rule';
+import { syncOriginRules } from '@/lib/providers/origin-sync';
 import {
   loadPrefs,
   prefsItem,
@@ -72,21 +73,20 @@ export default defineBackground(() => {
     });
   });
 
-  providersItem.watch((settings) => void syncOriginRules(settings));
+  const syncSavedOriginRules = (settings: ProviderSettings) =>
+    syncOriginRules(settings.locals.map((p) => p.baseUrl));
+  providersItem.watch((settings) => void syncSavedOriginRules(settings));
   prefsItem.watch((prefs) => void syncSelectionIconRegistration(prefs.selectionIcon));
   browser.permissions.onRemoved.addListener(() => {
     void loadPrefs().then(async (prefs) => {
       await syncSelectionIconRegistration(prefs.selectionIcon);
-      if (
-        prefs.selectionIcon &&
-        !(await browser.permissions.contains({ origins: ['https://*/*'] }))
-      ) {
+      if (prefs.selectionIcon && !(await hasAllSitesAccess())) {
         await updatePrefs({ selectionIcon: false });
       }
     });
   });
 
-  void providersItem.getValue().then(syncOriginRules);
+  void providersItem.getValue().then(syncSavedOriginRules);
   void loadPrefs().then((prefs) => syncSelectionIconRegistration(prefs.selectionIcon));
 });
 
@@ -102,16 +102,4 @@ async function showBubble(tabId: number, frameId: number, selectionText?: string
     });
     await browser.tabs.sendMessage(tabId, message, { frameId });
   }
-}
-
-async function syncOriginRules(settings: ProviderSettings): Promise<void> {
-  const rules = originRules(
-    settings.locals.map((p) => p.baseUrl),
-    browser.runtime.id,
-  ) as unknown as Browser.declarativeNetRequest.Rule[];
-  const existing = await browser.declarativeNetRequest.getDynamicRules();
-  await browser.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: existing.map((rule) => rule.id),
-    addRules: rules,
-  });
 }

@@ -17,6 +17,8 @@ type Ui = ShadowRootContentScriptUi<ReturnType<typeof mount>>;
 
 const MIN_ICON_SELECTION = 2;
 const GAP = 8;
+const ICON_OFFSET = 2;
+const BUBBLE_WIDTH = 420;
 
 export default defineContentScript({
   // Never in the manifest: injected on demand through activeTab, or registered
@@ -26,9 +28,10 @@ export default defineContentScript({
   cssInjectionMode: 'manual',
 
   main(ctx) {
-    const flag = window as { __glossaLoaded?: boolean };
-    if (flag.__glossaLoaded) return;
-    flag.__glossaLoaded = true;
+    // The script can be injected again on demand; keep a single instance per page.
+    const page = window as { __glossaLoaded?: boolean };
+    if (page.__glossaLoaded) return;
+    page.__glossaLoaded = true;
 
     let prefs: Prefs = DEFAULT_PREFS;
     void prefsItem.getValue().then((value) => (prefs = value));
@@ -110,7 +113,7 @@ function iconAllowed(prefs: Prefs): boolean {
 
 function fallbackSnapshot(text: string | undefined): SelectionSnapshot | null {
   if (!text?.trim()) return null;
-  const rect = new DOMRect(window.innerWidth / 2 - 210, 80, 0, 0);
+  const rect = new DOMRect((window.innerWidth - BUBBLE_WIDTH) / 2, 80, 0, 0);
   return { text: text.trim(), rect, context: null };
 }
 
@@ -152,8 +155,8 @@ function place(container: HTMLElement, rect: DOMRect, where: 'below' | 'after'):
     left: '0px',
   });
   const { width, height } = container.getBoundingClientRect();
-  let top = where === 'below' ? rect.bottom + GAP : rect.bottom + 2;
-  let left = where === 'below' ? rect.left : rect.right + 2;
+  let top = where === 'below' ? rect.bottom + GAP : rect.bottom + ICON_OFFSET;
+  let left = where === 'below' ? rect.left : rect.right + ICON_OFFSET;
   if (where === 'below' && top + height > window.innerHeight && rect.top - GAP - height > 0) {
     top = rect.top - GAP - height;
   }

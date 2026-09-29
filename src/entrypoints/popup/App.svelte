@@ -10,8 +10,10 @@
     loadPrefs,
     providersItem,
     updatePrefs,
+    updateProviderSettings,
     type Prefs,
   } from '@/lib/settings';
+  import LanguageSelect from '@/lib/ui/LanguageSelect.svelte';
   import { activeProfile, providerChoices } from '@/lib/ui/providers';
 
   let prefs = $state<Prefs>(DEFAULT_PREFS);
@@ -33,13 +35,8 @@
     prefs = await updatePrefs(change);
   }
 
-  function selectValue(event: Event): string {
-    return (event.currentTarget as HTMLSelectElement).value;
-  }
-
-  async function chooseProvider(event: Event) {
-    settings = { ...settings, activeProviderId: selectValue(event) };
-    await providersItem.setValue($state.snapshot(settings));
+  async function chooseProvider(id: string) {
+    settings = await updateProviderSettings((current) => ({ ...current, activeProviderId: id }));
   }
 
   async function toggleSite() {
@@ -53,15 +50,13 @@
 
 <main>
   <div class="pair">
-    <label>
-      <span class="field-label">{t('popupFrom')}</span>
-      <select value={prefs.source} onchange={(e) => save({ source: selectValue(e) })}>
-        <option value="auto">{t('languageAuto')}</option>
-        {#each languages as language (language.code)}
-          <option value={language.code}>{language.name}</option>
-        {/each}
-      </select>
-    </label>
+    <LanguageSelect
+      label={t('popupFrom')}
+      value={prefs.source}
+      {languages}
+      autoLabel={t('languageAuto')}
+      onchange={(source: string) => save({ source })}
+    />
     <button
       class="swap"
       type="button"
@@ -71,31 +66,30 @@
     >
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9l-2.5-2.5M13 11H4l2.5 2.5" /></svg>
     </button>
-    <label>
-      <span class="field-label">{t('popupTo')}</span>
-      <select value={prefs.target} onchange={(e) => save({ target: selectValue(e) })}>
-        {#each languages as language (language.code)}
-          <option value={language.code}>{language.name}</option>
-        {/each}
-      </select>
-    </label>
+    <LanguageSelect
+      label={t('popupTo')}
+      value={prefs.target}
+      {languages}
+      onchange={(target: string) => save({ target })}
+    />
   </div>
 
   {#if prefs.source === 'auto'}
-    <label>
-      <span class="field-label">{t('popupFallback')}</span>
-      <select value={prefs.fallback} onchange={(e) => save({ fallback: selectValue(e) })}>
-        {#each languages as language (language.code)}
-          <option value={language.code}>{language.name}</option>
-        {/each}
-      </select>
-    </label>
+    <LanguageSelect
+      label={t('popupFallback')}
+      value={prefs.fallback}
+      {languages}
+      onchange={(fallback: string) => save({ fallback })}
+    />
   {/if}
 
   <label>
     <span class="field-label">{t('popupProvider')}</span>
     {#if choices.length > 0}
-      <select value={settings.activeProviderId} onchange={chooseProvider}>
+      <select
+        value={settings.activeProviderId}
+        onchange={(e) => chooseProvider(e.currentTarget.value)}
+      >
         {#each choices as choice (choice.id)}
           <option value={choice.id}>{choice.label}</option>
         {/each}
