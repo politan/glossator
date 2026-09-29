@@ -343,5 +343,19 @@
   },
   "shortcutMissing": {
     "message": "Skrót nie jest ustawiony. Przeglądarka zostawia go pustym, gdy inne rozszerzenie używa tych samych klawiszy. Wybierz go na stronie skrótów."
+  },
+  "bubbleFromCache": {
+    "message": "z pamięci"
+  },
+  "costTokens": {
+    "message": "Tokeny: $IN$ na wejściu, $OUT$ na wyjściu",
+    "placeholders": {
+      "in": {
+        "content": "$1"
+      },
+      "out": {
+        "content": "$2"
+      }
+    }
   }
 }

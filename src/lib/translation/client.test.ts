@@ -304,3 +304,30 @@ describe('request timeouts', () => {
     });
   });
 });
+
+describe('streamTranslation usage', () => {
+  it('reports what OpenRouter charged, from the usage chunk before [DONE]', async () => {
+    const usage = `data: ${JSON.stringify({
+      choices: [{ delta: {}, finish_reason: 'stop' }],
+      usage: { prompt_tokens: 42, completion_tokens: 7, total_tokens: 49, cost: 0.0000052 },
+    })}\n\n`;
+    const { fetch } = fakeFetch(sseResponse([delta('Cześć'), usage, 'data: [DONE]\n\n']));
+    const reported: unknown[] = [];
+    const text = await collect(
+      streamTranslation(openRouter, messages, { fetch, onUsage: (u) => reported.push(u) }),
+    );
+    expect(text).toBe('Cześć');
+    expect(reported).toEqual([{ costUsd: 0.0000052, promptTokens: 42, completionTokens: 7 }]);
+  });
+
+  it('reports nothing when the server gives no cost, as local servers do', async () => {
+    const usage = `data: ${JSON.stringify({
+      choices: [],
+      usage: { prompt_tokens: 42, completion_tokens: 7, total_tokens: 49 },
+    })}\n\n`;
+    const { fetch } = fakeFetch(sseResponse([delta('Cześć'), usage, 'data: [DONE]\n\n']));
+    const reported: unknown[] = [];
+    await collect(streamTranslation(ollama, messages, { fetch, onUsage: (u) => reported.push(u) }));
+    expect(reported).toEqual([]);
+  });
+});

@@ -35,9 +35,19 @@ export interface RequestOptions {
   timeoutMs?: number;
 }
 
+/** What a Translation cost, as reported by the Provider. */
+export interface Usage {
+  /** Amount charged to the user's account, in USD. */
+  costUsd: number;
+  promptTokens: number;
+  completionTokens: number;
+}
+
 export interface StreamOptions {
   signal?: AbortSignal;
   fetch?: typeof fetch;
+  /** Called once the Provider reports what the Translation cost. */
+  onUsage?: (usage: Usage) => void;
   /**
    * How long the stream may stay silent, including before the first token.
    * Local servers may need a while to load the model first.
@@ -86,6 +96,14 @@ export async function* streamTranslation(
       const event = JSON.parse(data) as StreamEvent;
       if (event.error)
         throw new TranslationError(codeForStatus(event.error.code), event.error.message);
+      // OpenRouter always sends usage in its last chunk; local servers only when asked.
+      if (typeof event.usage?.cost === 'number') {
+        options.onUsage?.({
+          costUsd: event.usage.cost,
+          promptTokens: event.usage.prompt_tokens ?? 0,
+          completionTokens: event.usage.completion_tokens ?? 0,
+        });
+      }
       const content = event.choices?.[0]?.delta?.content;
       if (!content) continue;
       const visible = filter.push(content);
@@ -160,6 +178,7 @@ async function request(
 
 interface StreamEvent {
   error?: { code: number; message?: string };
+  usage?: { prompt_tokens?: number; completion_tokens?: number; cost?: number };
   choices?: { delta?: { content?: string | null } }[];
 }
 

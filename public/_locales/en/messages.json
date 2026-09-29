@@ -343,5 +343,19 @@
   },
   "shortcutMissing": {
     "message": "No shortcut is set. The browser leaves it empty when another extension already uses the same keys. Pick one on the shortcuts page."
+  },
+  "bubbleFromCache": {
+    "message": "from cache"
+  },
+  "costTokens": {
+    "message": "$IN$ tokens in, $OUT$ out",
+    "placeholders": {
+      "in": {
+        "content": "$1"
+      },
+      "out": {
+        "content": "$2"
+      }
+    }
   }
 }

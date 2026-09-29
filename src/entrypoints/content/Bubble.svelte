@@ -12,10 +12,12 @@
     type TranslateRequest,
   } from '@/lib/messages';
   import { badgeLabel } from '@/lib/ui/badge';
+  import { formatCost, tokenSummary } from '@/lib/ui/cost';
   import { failureText, needsSettings, showsDetail } from '@/lib/ui/errors';
 
   type Meta = Extract<TranslateEvent, { type: 'meta' }>;
   type Failure = Extract<TranslateEvent, { type: 'error' }>;
+  type Done = Extract<TranslateEvent, { type: 'done' }>;
 
   interface Props {
     text: string;
@@ -31,7 +33,7 @@
   let translation = $state('');
   let meta = $state<Meta | null>(null);
   let failure = $state<Failure | null>(null);
-  let done = $state(false);
+  let finished = $state<Done | null>(null);
   let slow = $state(false);
   let copied = $state(false);
   let target = $state<string | null>(null);
@@ -39,6 +41,7 @@
   let slowTimer: ReturnType<typeof setTimeout> | undefined;
 
   const languages = $derived(meta ? languagesFor(meta.profile, uiLocale()) : []);
+  const done = $derived(finished !== null);
   const working = $derived(!done && !failure);
 
   function start(viaCloud = false) {
@@ -47,7 +50,7 @@
     translation = '';
     meta = null;
     failure = null;
-    done = false;
+    finished = null;
     slow = false;
     copied = false;
 
@@ -65,7 +68,7 @@
           break;
         case 'done':
           clearTimeout(slowTimer);
-          done = true;
+          finished = event;
           break;
         case 'error':
           clearTimeout(slowTimer);
@@ -151,6 +154,13 @@
         {badgeLabel(meta.privacy, meta.providerName)}
       </span>
       <span class="model" title={meta.model}>{meta.model}</span>
+      {#if finished?.cached}
+        <span class="cost">{t('bubbleFromCache')}</span>
+      {:else if finished?.usage}
+        <span class="cost" title={tokenSummary(finished.usage)}>
+          {formatCost(finished.usage, uiLocale())}
+        </span>
+      {/if}
     {/if}
     <span class="actions">
       {#if failure}
@@ -301,11 +311,16 @@
   }
 
   .model {
-    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 1 1 80px;
+    flex: 1 1 0;
+    min-width: 3em;
+  }
+
+  .cost {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
   .actions {

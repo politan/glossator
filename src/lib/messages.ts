@@ -1,7 +1,7 @@
 import type { PromptProfileId } from './prompts/profile-id';
 import type { LanguagePair } from './pair';
 import type { Privacy } from './providers/privacy';
-import type { TranslationErrorCode } from './translation/client';
+import type { TranslationErrorCode, Usage } from './translation/client';
 
 export const TRANSLATE_PORT = 'glossator:translate';
 
@@ -29,7 +29,13 @@ export type TranslateEvent =
       pair: LanguagePair;
     }
   | { type: 'delta'; text: string }
-  | { type: 'done' }
+  | {
+      type: 'done';
+      /** What the Provider charged; null when it did not say (Local Providers, cache). */
+      usage: Usage | null;
+      /** Served from the session cache, so nothing was sent or charged. */
+      cached: boolean;
+    }
   | { type: 'error'; code: TranslateFailure; detail?: string; cloudAvailable: boolean };
 
 /** Messages the background sends to a tab's content script. */
