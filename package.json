@@ -1,6 +1,6 @@
 {
   "name": "glossator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Translate selected text in a lightweight popup. Privacy-first: local LLMs or your own OpenRouter key, no Google.",
   "type": "module",
