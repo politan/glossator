@@ -1,0 +1,42 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected and what you saw instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options:
+        - OpenRouter
+        - Ollama
+        - LM Studio
+        - llama.cpp
+        - Jan
+        - Other OpenAI-compatible server
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      placeholder: tencent/hy-mt2-30b-a3b
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Brave 1.84, Chromium 142
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Glossa version
+    validations:
+      required: true
