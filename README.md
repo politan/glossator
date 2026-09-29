@@ -16,7 +16,14 @@
   <img src="https://img.shields.io/badge/Brave%20%7C%20Chrome%20%7C%20Edge-Manifest%20V3-3b5bdb" alt="Chromium, Manifest V3" />
 </p>
 
-<!-- Demo GIF goes here once the first release is recorded. -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/bubble-dark.png" />
+    <img src="docs/screenshots/bubble-light.png" alt="Glossa's bubble showing a Polish translation of the selected English sentence, marked Local" width="680" />
+  </picture>
+</p>
+
+<!-- A demo GIF of selecting text and streaming the translation goes here. -->
 
 ## Why Glossa
 
@@ -32,10 +39,10 @@ Every translation shows a small badge saying which one was used. Glossa never sw
 ## Features
 
 - **Translate a selection in place.** Right-click → _Translate with Glossa_, press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>, or turn on the optional icon that appears next to selected text.
-- **Streaming output.** The translation appears as the model writes it.
-- **Local LLMs first.** Presets for [Ollama](https://ollama.com), [LM Studio](https://lmstudio.ai), [llama.cpp](https://github.com/ggml-org/llama.cpp) and [Jan](https://jan.ai), plus any OpenAI-compatible server. Ollama works without touching `OLLAMA_ORIGINS`.
+- **Streaming.** The translation appears as the model writes it.
+- **Local models first.** Presets for [Ollama](https://ollama.com), [LM Studio](https://lmstudio.ai), [llama.cpp](https://github.com/ggml-org/llama.cpp) and [Jan](https://jan.ai), plus any OpenAI-compatible server. Ollama works without touching `OLLAMA_ORIGINS`.
 - **Dedicated translation models.** Defaults to Tencent's [Hy-MT2](https://huggingface.co/tencent/Hy-MT2-30B-A3B) on OpenRouter, and speaks the prompt formats of Hy-MT and Google's [TranslateGemma](https://ollama.com/library/translategemma) as well as general chat models.
-- **Auto-detect with a way back.** Set `Auto → Polish` with English as the fallback: English text becomes Polish, Polish text becomes English.
+- **Auto with a way back.** Set `Auto → Polish` with English as the fallback: English text becomes Polish, Polish text becomes English.
 - **Optional surrounding context** for ambiguous words, off by default.
 - **Private by default.** OpenRouter requests use zero-data-retention routing, the API key never reaches web pages, and there is no history or telemetry.
 - **Light and dark**, following your system. Interface in English and Polish.
