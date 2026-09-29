@@ -1,4 +1,4 @@
-import { resolvePromptProfile, type ChatMessage } from '../prompts/profiles';
+import { profileOf, type ChatMessage } from '../prompts/profiles';
 import {
   OPENROUTER_ATTRIBUTION,
   OPENROUTER_BASE_URL,
@@ -32,14 +32,21 @@ export class TranslationError extends Error {
 export interface RequestOptions {
   signal?: AbortSignal;
   fetch?: typeof fetch;
+  timeoutMs?: number;
 }
 
-export interface StreamOptions extends RequestOptions {
-  /** How long to wait for the first token. Local servers may need to load the model first. */
-  firstTokenTimeoutMs?: number;
+export interface StreamOptions {
+  signal?: AbortSignal;
+  fetch?: typeof fetch;
+  /**
+   * How long the stream may stay silent, including before the first token.
+   * Local servers may need a while to load the model first.
+   */
+  idleTimeoutMs?: number;
 }
 
-const FIRST_TOKEN_TIMEOUT_MS = { cloud: 30_000, local: 120_000 };
+const IDLE_TIMEOUT_MS = { cloud: 30_000, local: 120_000 };
+const REQUEST_TIMEOUT_MS = 10_000;
 
 export async function* streamTranslation(
   provider: Provider,
@@ -52,9 +59,15 @@ export async function* streamTranslation(
     controller.abort(options.signal?.reason);
   };
   options.signal?.addEventListener('abort', forwardAbort);
-  const timer = setTimeout(() => {
-    controller.abort(new TranslationError('timeout'));
-  }, options.firstTokenTimeoutMs ?? FIRST_TOKEN_TIMEOUT_MS[provider.kind]);
+  const idleMs = options.idleTimeoutMs ?? IDLE_TIMEOUT_MS[provider.kind];
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const restartTimer = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      controller.abort(new TranslationError('timeout'));
+    }, idleMs);
+  };
+  restartTimer();
   const filter = new ThinkFilter();
 
   try {
@@ -67,17 +80,19 @@ export async function* streamTranslation(
     if (!response.ok) throw await errorFromResponse(response, provider);
     if (!response.body) return;
 
-    for await (const data of sseData(response.body)) {
+    for await (const data of sseData(response.body, controller.signal)) {
+      restartTimer();
       if (data === '[DONE]') break;
       const event = JSON.parse(data) as StreamEvent;
       if (event.error)
         throw new TranslationError(codeForStatus(event.error.code), event.error.message);
       const content = event.choices?.[0]?.delta?.content;
       if (!content) continue;
-      clearTimeout(timer);
       const visible = filter.push(content);
       if (visible) yield visible;
     }
+    // Cancelling a stalled body ends it like a normal close, so check why it ended.
+    controller.signal.throwIfAborted();
     const rest = filter.flush();
     if (rest) yield rest;
   } catch (error) {
@@ -123,11 +138,21 @@ async function request(
   options: RequestOptions,
 ): Promise<Response> {
   const doFetch = options.fetch ?? fetch;
+  const timeout = new TranslationError('timeout');
+  const controller = new AbortController();
+  const timer = setTimeout(() => {
+    controller.abort(timeout);
+  }, options.timeoutMs ?? REQUEST_TIMEOUT_MS);
+  const signal = options.signal
+    ? AbortSignal.any([options.signal, controller.signal])
+    : controller.signal;
   let response: Response;
   try {
-    response = await doFetch(url, { headers: headersFor(provider), signal: options.signal });
+    response = await doFetch(url, { headers: headersFor(provider), signal });
   } catch (error) {
-    throw asTranslationError(error);
+    throw controller.signal.aborted ? timeout : asTranslationError(error);
+  } finally {
+    clearTimeout(timer);
   }
   if (!response.ok) throw await errorFromResponse(response, provider);
   return response;
@@ -158,7 +183,7 @@ function bodyFor(provider: Provider, messages: ChatMessage[]): Record<string, un
     if (ignore.length > 0) routing.ignore = ignore;
     body.provider = routing;
     // Local servers disagree on how to turn thinking off, so there we only hide it.
-    if (resolvePromptProfile(provider.model, provider.promptProfile) === 'generic') {
+    if (profileOf(provider) === 'generic') {
       body.reasoning = { effort: 'minimal', exclude: true };
     }
   }
@@ -222,8 +247,16 @@ function asTranslationError(error: unknown): TranslationError {
 }
 
 /** Yields the payload of each `data:` line of a server-sent event stream. */
-async function* sseData(body: ReadableStream<Uint8Array>): AsyncGenerator<string> {
+async function* sseData(
+  body: ReadableStream<Uint8Array>,
+  signal: AbortSignal,
+): AsyncGenerator<string> {
   const reader = body.getReader();
+  // A stalled body never settles read(), so cancel it when the request is aborted.
+  const cancel = () => {
+    reader.cancel(signal.reason).catch(() => undefined);
+  };
+  signal.addEventListener('abort', cancel);
   const decoder = new TextDecoder();
   let buffer = '';
   try {
@@ -239,6 +272,7 @@ async function* sseData(body: ReadableStream<Uint8Array>): AsyncGenerator<string
       }
     }
   } finally {
+    signal.removeEventListener('abort', cancel);
     reader.releaseLock();
   }
 }

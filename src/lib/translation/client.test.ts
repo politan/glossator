@@ -209,8 +209,24 @@ describe('streamTranslation errors', () => {
   it('times out when the first token takes too long', async () => {
     const hanging = hangingFetch();
     await expect(
-      collect(streamTranslation(ollama, messages, { fetch: hanging, firstTokenTimeoutMs: 10 })),
+      collect(streamTranslation(ollama, messages, { fetch: hanging, idleTimeoutMs: 10 })),
     ).rejects.toMatchObject({ code: 'timeout' });
+  });
+
+  it('times out when the stream stalls after the first token', async () => {
+    const stalled = new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(delta('Dzień')));
+      },
+    });
+    const { fetch } = fakeFetch(new Response(stalled, { status: 200 }));
+    const pieces: string[] = [];
+    await expect(async () => {
+      for await (const piece of streamTranslation(ollama, messages, { fetch, idleTimeoutMs: 20 })) {
+        pieces.push(piece);
+      }
+    }).rejects.toMatchObject({ code: 'timeout' });
+    expect(pieces).toEqual(['Dzień']);
   });
 
   it('stops quietly when the caller aborts', async () => {
@@ -275,6 +291,16 @@ describe('checkOpenRouterKey', () => {
     );
     await expect(checkOpenRouterKey('bad', { fetch })).rejects.toMatchObject({
       code: 'unauthorized',
+    });
+  });
+});
+
+describe('request timeouts', () => {
+  it('gives up on a server that never answers the model list', async () => {
+    await expect(
+      listModels(ollama, { fetch: hangingFetch(), timeoutMs: 10 }),
+    ).rejects.toMatchObject({
+      code: 'timeout',
     });
   });
 });
