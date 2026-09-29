@@ -1,0 +1,3 @@
+# Never fall back from a Local Provider to a Cloud Provider automatically
+
+When the active Provider is a Local Provider and it fails (server down, model missing, timeout), Glossa shows the error in the Bubble and offers a one-off "Try via OpenRouter (sends text to the cloud)" action. It never retries on a Cloud Provider by itself. An automatic fallback would be more convenient, but it would silently send text the user chose to keep on their machine to a third party, the one case Local Providers exist to prevent. Several Providers can be configured, but exactly one is active at a time and only the user switches it.
