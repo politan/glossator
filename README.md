@@ -138,6 +138,10 @@ pnpm zip        # out/glossa-<version>-chrome.zip
 
 Built with [WXT](https://wxt.dev), [Svelte 5](https://svelte.dev) and TypeScript. The vocabulary lives in [CONTEXT.md](CONTEXT.md) and design decisions in [docs/adr](docs/adr). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## The name
+
+_Glossa_ is Greek (γλῶσσα) and Latin for "tongue" and "language". In medieval manuscripts a _gloss_ was a short note written between the lines or in the margin to explain or translate a difficult word, right where the reader met it. That is what this extension does: a small translation next to the text you are reading. The same root gives us "glossary", which is also what the project's [CONTEXT.md](CONTEXT.md) is.
+
 ## License
 
 [MIT](LICENSE)
