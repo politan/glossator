@@ -1,10 +1,13 @@
 import { browser } from 'wxt/browser';
+import { termsFor, type Term } from './glossary';
+import { loadGlossary } from './glossary-store';
 import type { TranslateEvent, TranslateRequest } from './messages';
 import { isSelectionTooLong, resolveLanguagePair, type LanguagePair } from './pair';
 import { buildMessages, profileOf } from './prompts/profiles';
 import { privacyOf } from './providers/privacy';
 import type { Provider } from './providers/types';
 import { activeProvider, loadPrefs, providerName, providersItem } from './settings';
+import { styleDescription } from './style';
 import { TranslationError, streamTranslation, type Usage } from './translation/client';
 
 const CACHE_LIMIT = 100;
@@ -55,6 +58,8 @@ export async function runTranslation(
   );
   const profile = profileOf(provider);
   const context = prefs.useSurroundingContext ? request.context : null;
+  const terms = termsFor(await loadGlossary(), text, pair);
+  const style = styleDescription(prefs.style, prefs.customStyle);
 
   emit({
     type: 'meta',
@@ -65,7 +70,7 @@ export async function runTranslation(
     pair,
   });
 
-  const key = cacheKey(provider, profile, pair, text, context);
+  const key = cacheKey(provider, profile, pair, text, context, terms, style);
   const cached = cache.get(key);
   if (cached !== undefined) {
     emit({ type: 'delta', text: cached });
@@ -78,6 +83,8 @@ export async function runTranslation(
     source: pair.source,
     target: pair.target,
     ...(context ? { context } : {}),
+    terms,
+    ...(style ? { style } : {}),
   });
   let translation = '';
   let usage: Usage | null = null;
@@ -121,8 +128,10 @@ function cacheKey(
   pair: LanguagePair,
   text: string,
   context: string | null,
+  terms: Term[],
+  style: string | undefined,
 ): string {
-  return JSON.stringify([provider.id, provider.model, profile, pair, text, context]);
+  return JSON.stringify([provider.id, provider.model, profile, pair, text, context, terms, style]);
 }
 
 function remember(key: string, translation: string): void {

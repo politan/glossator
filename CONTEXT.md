@@ -56,6 +56,18 @@ _Avoid_: secondary language, reverse language
 The paragraph around a Selection, sent alongside it only when the user opts in, to help the model resolve ambiguous words.
 _Avoid_: background, page context
 
+**Glossary**:
+The user's own list of Term Pairs that the model must follow, so recurring words are always translated the same way.
+_Avoid_: dictionary, terminology list, word list
+
+**Term Pair**:
+One Glossary entry linking a term in one language to its fixed counterpart in another; it applies in both directions.
+_Avoid_: entry, mapping, rule
+
+**Style**:
+The register the Translation should be written in, such as formal, casual, technical or a description of the user's own.
+_Avoid_: tone, voice, formality
+
 ### Where Translations come from
 
 **Provider**:

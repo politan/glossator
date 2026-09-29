@@ -118,3 +118,78 @@ describe('TranslateGemma profile', () => {
     expect(message?.content).not.toContain('river');
   });
 });
+
+describe('Glossary and Style', () => {
+  const terms = [
+    { source: 'deployment', target: 'wdrożenie' },
+    { source: 'lead', target: 'lead' },
+  ];
+
+  it('HY-MT uses the terminology template from the model card', () => {
+    const [message] = buildMessages('hy-mt', {
+      text: 'The lead approved the deployment.',
+      source: 'en',
+      target: 'pl',
+      terms,
+    });
+    expect(message?.content).toBe(
+      'Reference the following translations:\ndeployment translates to wdrożenie\nlead translates to lead\n\nTranslate the following text into Polish. Note that you must ONLY output the translated result without any additional explanation:\n\nThe lead approved the deployment.',
+    );
+  });
+
+  it('HY-MT uses the style template from the model card', () => {
+    const [message] = buildMessages('hy-mt', {
+      text: 'Could you send me the report?',
+      source: 'en',
+      target: 'pl',
+      style: 'formal',
+    });
+    expect(message?.content).toBe(
+      'Please translate the following text into Polish. Note that the translation style must strictly conform to [formal]:\n\nCould you send me the report?',
+    );
+  });
+
+  it('HY-MT combines terms, context and style in one user message', () => {
+    const [message] = buildMessages('hy-mt', {
+      text: 'deployment',
+      source: 'en',
+      target: 'pl',
+      terms: [{ source: 'deployment', target: 'wdrożenie' }],
+      context: 'The deployment failed twice.',
+      style: 'technical',
+    });
+    expect(message?.content).toBe(
+      'Reference the following translations:\ndeployment translates to wdrożenie\n\n[Background Information]\nThe deployment failed twice.\n\nPlease translate the following text into Polish, taking the provided background information into consideration. Note that the translation style must strictly conform to [technical].\n\n[Source Text]\ndeployment',
+    );
+  });
+
+  it('general models get terms and style in the system message', () => {
+    const [system, user] = buildMessages('generic', {
+      text: 'The deployment is done.',
+      source: 'en',
+      target: 'pl',
+      terms,
+      style: 'casual, conversational',
+    });
+    expect(system?.content).toContain('deployment → wdrożenie');
+    expect(system?.content).toContain('lead → lead');
+    expect(system?.content).toContain('casual, conversational');
+    expect(user).toEqual({ role: 'user', content: 'The deployment is done.' });
+  });
+
+  it('TranslateGemma leaves terms and style out, since its template has no room for them', () => {
+    const [plain] = buildMessages('translategemma', {
+      text: 'deployment',
+      source: 'en',
+      target: 'pl',
+    });
+    const [withExtras] = buildMessages('translategemma', {
+      text: 'deployment',
+      source: 'en',
+      target: 'pl',
+      terms,
+      style: 'formal',
+    });
+    expect(withExtras).toEqual(plain);
+  });
+});

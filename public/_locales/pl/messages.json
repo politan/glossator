@@ -357,5 +357,67 @@
         "content": "$2"
       }
     }
+  },
+  "sectionStyle": {
+    "message": "Styl"
+  },
+  "styleHint": {
+    "message": "Mówi modelowi, jak ma brzmieć tłumaczenie."
+  },
+  "styleAuto": {
+    "message": "Automatyczny (decyduje model)"
+  },
+  "styleFormal": {
+    "message": "Formalny"
+  },
+  "styleCasual": {
+    "message": "Swobodny"
+  },
+  "styleTechnical": {
+    "message": "Techniczny"
+  },
+  "styleCustom": {
+    "message": "Własny…"
+  },
+  "styleCustomPlaceholder": {
+    "message": "np. krótko i prosto, jak w czacie"
+  },
+  "sectionGlossary": {
+    "message": "Słowniczek"
+  },
+  "glossaryHint": {
+    "message": "Terminy, które zawsze mają być tłumaczone tak samo. Każda para działa w obie strony, a do modelu trafiają tylko terminy znalezione w zaznaczonym tekście."
+  },
+  "glossaryAdd": {
+    "message": "Dodaj termin"
+  },
+  "glossaryRemove": {
+    "message": "Usuń"
+  },
+  "glossaryEmpty": {
+    "message": "Brak terminów."
+  },
+  "glossaryTermPlaceholder": {
+    "message": "termin"
+  },
+  "glossaryCount": {
+    "message": "Terminy: $COUNT$ z $MAX$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "max": {
+        "content": "$2"
+      }
+    }
+  },
+  "glossaryFull": {
+    "message": "Słowniczek jest pełny. Usuń terminy, aby dodać nowe."
+  },
+  "extrasUnsupported": {
+    "message": "Bieżący model (TranslateGemma) nie obsługuje słowniczka ani stylu."
+  },
+  "popupStyle": {
+    "message": "Styl"
   }
 }
