@@ -1,0 +1,56 @@
+{
+  "name": "glossa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Translate selected text in a lightweight popup. Privacy-first: local LLMs or your own OpenRouter key, no Google.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jakub Politański",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/politan/glossa.git"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "postinstall": "wxt prepare",
+    "prepare": "husky",
+    "check": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "icons": "node scripts/render-icons.mjs",
+    "verify": "pnpm format:check && pnpm lint && pnpm check && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@eslint/js": "^10.0.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@wxt-dev/browser": "^0.3.0",
+    "@wxt-dev/module-svelte": "^2.0.5",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-svelte": "^3.23.0",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-svelte": "^4.1.1",
+    "svelte": "^5.57.1",
+    "svelte-check": "^4.7.6",
+    "svelte-eslint-parser": "^1.8.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.2",
+    "wxt": "^0.21.4"
+  }
+}
