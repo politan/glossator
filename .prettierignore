@@ -1,0 +1,4 @@
+out/
+.wxt/
+pnpm-lock.yaml
+CHANGELOG.md

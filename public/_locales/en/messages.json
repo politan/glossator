@@ -1,0 +1,347 @@
+{
+  "extName": {
+    "message": "Glossator"
+  },
+  "extDescription": {
+    "message": "Translate selected text in a small bubble, with a local LLM or your own OpenRouter key."
+  },
+  "commandTranslateSelection": {
+    "message": "Translate the selected text"
+  },
+  "contextMenuTranslate": {
+    "message": "Translate with Glossator"
+  },
+  "selectionIconLabel": {
+    "message": "Translate with Glossator"
+  },
+  "bubbleTranslating": {
+    "message": "Translating…"
+  },
+  "bubbleLoadingModel": {
+    "message": "Loading model…"
+  },
+  "bubbleCopy": {
+    "message": "Copy"
+  },
+  "bubbleCopied": {
+    "message": "Copied"
+  },
+  "bubbleRetry": {
+    "message": "Retry"
+  },
+  "bubbleClose": {
+    "message": "Close"
+  },
+  "bubbleTarget": {
+    "message": "Translate into"
+  },
+  "badgeLocal": {
+    "message": "Local"
+  },
+  "badgeSelfHosted": {
+    "message": "Self-hosted"
+  },
+  "badgeCloud": {
+    "message": "Cloud"
+  },
+  "errorNotConfigured": {
+    "message": "Choose where translations come from to start translating."
+  },
+  "errorEmpty": {
+    "message": "Select some text first."
+  },
+  "errorTooLong": {
+    "message": "The selection is too long. Glossator translates up to $LIMIT$ characters at a time.",
+    "placeholders": {
+      "limit": {
+        "content": "$1"
+      }
+    }
+  },
+  "errorUnauthorized": {
+    "message": "The API key was rejected. Check it in Settings."
+  },
+  "errorInsufficientCredits": {
+    "message": "Your OpenRouter account has run out of credits."
+  },
+  "errorModeration": {
+    "message": "OpenRouter declined to translate this text."
+  },
+  "errorOriginRejected": {
+    "message": "The local server refused the request. See Troubleshooting in the README (OLLAMA_ORIGINS)."
+  },
+  "errorModelNotFound": {
+    "message": "This server does not have the selected model. Pull it first or pick another one in Settings."
+  },
+  "errorTimeout": {
+    "message": "The server took too long to answer."
+  },
+  "errorRateLimited": {
+    "message": "Too many requests right now. Wait a moment and retry."
+  },
+  "errorUnavailable": {
+    "message": "The model is temporarily unavailable. Try again shortly."
+  },
+  "errorBadRequest": {
+    "message": "The server rejected the request."
+  },
+  "errorUnreachable": {
+    "message": "Cannot reach the server. Is it running?"
+  },
+  "errorUnknown": {
+    "message": "Something went wrong."
+  },
+  "actionOpenSettings": {
+    "message": "Open settings"
+  },
+  "actionTryCloud": {
+    "message": "Try via OpenRouter (sends the text to the cloud)"
+  },
+  "languageAuto": {
+    "message": "Auto (detect language)"
+  },
+  "popupFrom": {
+    "message": "From"
+  },
+  "popupTo": {
+    "message": "To"
+  },
+  "popupFallback": {
+    "message": "If it is already in that language, into"
+  },
+  "popupSwap": {
+    "message": "Swap languages"
+  },
+  "popupProvider": {
+    "message": "Translate with"
+  },
+  "popupNothingConfigured": {
+    "message": "Nothing is set up yet."
+  },
+  "popupHideOnSite": {
+    "message": "Hide the icon on $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSettings": {
+    "message": "Settings"
+  },
+  "settingsTitle": {
+    "message": "Glossator settings"
+  },
+  "onboardingTitle": {
+    "message": "Where should translations come from?"
+  },
+  "onboardingIntro": {
+    "message": "Glossator has no server of its own. Pick a place to send selected text to; you can add the other one later."
+  },
+  "onboardingLocalTitle": {
+    "message": "Local: most private"
+  },
+  "onboardingLocalBody": {
+    "message": "Text never leaves your computer. Needs Ollama, LM Studio or a similar server running a translation model."
+  },
+  "onboardingCloudTitle": {
+    "message": "OpenRouter: easiest"
+  },
+  "onboardingCloudBody": {
+    "message": "Paste an OpenRouter API key and start. Text goes through OpenRouter to the model's host, with no-retention routing on by default."
+  },
+  "onboardingChoose": {
+    "message": "Set up"
+  },
+  "sectionProvider": {
+    "message": "Active provider"
+  },
+  "sectionProviderHint": {
+    "message": "Glossator only uses the provider selected here. It never switches to the cloud on its own."
+  },
+  "providerNone": {
+    "message": "None configured yet"
+  },
+  "sectionCloud": {
+    "message": "OpenRouter"
+  },
+  "cloudKey": {
+    "message": "API key"
+  },
+  "cloudKeyHint": {
+    "message": "Stored only in this browser profile. Create one at openrouter.ai/keys."
+  },
+  "cloudKeyCheck": {
+    "message": "Save and check"
+  },
+  "cloudKeyChecking": {
+    "message": "Checking…"
+  },
+  "cloudKeyOk": {
+    "message": "Key works. Remaining credit: $CREDIT$.",
+    "placeholders": {
+      "credit": {
+        "content": "$1"
+      }
+    }
+  },
+  "cloudKeyOkUnlimited": {
+    "message": "Key works. No spending limit set."
+  },
+  "cloudModel": {
+    "message": "Model"
+  },
+  "cloudModelCustom": {
+    "message": "Custom model ID…"
+  },
+  "cloudModelCustomHint": {
+    "message": "Any model ID from openrouter.ai/models. You choose where your text goes."
+  },
+  "cloudStrictPrivacy": {
+    "message": "Strict privacy routing"
+  },
+  "cloudStrictPrivacyHint": {
+    "message": "Only route to hosts that neither store nor train on your text. Some models become unavailable."
+  },
+  "modelNoteDefault": {
+    "message": "dedicated translation model, default"
+  },
+  "modelNoteSmaller": {
+    "message": "dedicated translation model, smaller"
+  },
+  "modelNoteCheapest": {
+    "message": "dedicated translation model, cheapest"
+  },
+  "modelNoteGemma": {
+    "message": "open weights, independent hosts, more languages"
+  },
+  "sectionLocal": {
+    "message": "Local servers"
+  },
+  "localHint": {
+    "message": "Any server with an OpenAI-compatible API. Local and private-network addresses count as Local; anything else is shown as Self-hosted."
+  },
+  "localAdd": {
+    "message": "Add server"
+  },
+  "localName": {
+    "message": "Name"
+  },
+  "localPreset": {
+    "message": "Server type"
+  },
+  "localBaseUrl": {
+    "message": "Address"
+  },
+  "localKey": {
+    "message": "API key (optional)"
+  },
+  "localModel": {
+    "message": "Model"
+  },
+  "localModelPlaceholder": {
+    "message": "e.g. translategemma:4b"
+  },
+  "localTest": {
+    "message": "Test connection"
+  },
+  "localTesting": {
+    "message": "Testing…"
+  },
+  "localTestOk": {
+    "message": "Connected. $COUNT$ models available.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "localTestMissing": {
+    "message": "Connected, but this model is missing. For Ollama run: ollama pull $MODEL$",
+    "placeholders": {
+      "model": {
+        "content": "$1"
+      }
+    }
+  },
+  "localRemove": {
+    "message": "Remove"
+  },
+  "localSave": {
+    "message": "Save"
+  },
+  "presetOllamaHint": {
+    "message": "Works without extra setup."
+  },
+  "presetLmStudioHint": {
+    "message": "Turn on \"Enable CORS\" in LM Studio's server settings."
+  },
+  "presetLlamaCppHint": {
+    "message": "Start llama-server with the model you want to use."
+  },
+  "presetJanHint": {
+    "message": "Start Jan's local API server."
+  },
+  "presetCustomHint": {
+    "message": "Any OpenAI-compatible endpoint, such as vLLM."
+  },
+  "presetCustom": {
+    "message": "Other (OpenAI-compatible)"
+  },
+  "promptProfile": {
+    "message": "Prompt profile"
+  },
+  "promptProfileAuto": {
+    "message": "Automatic"
+  },
+  "sectionLanguages": {
+    "message": "Languages"
+  },
+  "languagesSource": {
+    "message": "Translate from"
+  },
+  "languagesTarget": {
+    "message": "Translate into"
+  },
+  "languagesFallback": {
+    "message": "If the text is already in that language, translate into"
+  },
+  "languagesUnsupported": {
+    "message": "The current model does not support $LANGUAGE$.",
+    "placeholders": {
+      "language": {
+        "content": "$1"
+      }
+    }
+  },
+  "surroundingContext": {
+    "message": "Send surrounding context"
+  },
+  "surroundingContextHint": {
+    "message": "Sends the paragraph around the selection too, which helps with ambiguous words. Off by default because it sends more of the page."
+  },
+  "sectionSelectionIcon": {
+    "message": "Selection icon"
+  },
+  "selectionIconToggle": {
+    "message": "Show a translate icon next to selected text on every page"
+  },
+  "selectionIconHint": {
+    "message": "A small icon next to selected text opens the translation. Without it, use the right-click menu or the keyboard shortcut."
+  },
+  "sectionShortcut": {
+    "message": "Keyboard shortcut"
+  },
+  "shortcutHint": {
+    "message": "Suggested: Alt+Shift+T (Option+Shift+T on a Mac). You can change it on the browser's extension shortcuts page."
+  },
+  "shortcutOpen": {
+    "message": "Change shortcut"
+  },
+  "saved": {
+    "message": "Saved"
+  },
+  "shortcutMissing": {
+    "message": "No shortcut is set. The browser leaves it empty when another extension already uses the same keys. Pick one on the shortcuts page."
+  }
+}

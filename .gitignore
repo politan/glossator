@@ -141,3 +141,11 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# WXT
+.wxt/
+.output/
+stats.html
+stats-*.json
+web-ext.config.ts
+.DS_Store
