@@ -140,7 +140,7 @@ Built with [WXT](https://wxt.dev), [Svelte 5](https://svelte.dev) and TypeScript
 
 ## The name
 
-_Glossa_ is Greek (γλῶσσα) and Latin for "tongue" and "language". In medieval manuscripts a _gloss_ was a short note written between the lines or in the margin to explain or translate a difficult word, right where the reader met it. That is what this extension does: a small translation next to the text you are reading. The same root gives us "glossary", which is also what the project's [CONTEXT.md](CONTEXT.md) is.
+In medieval manuscripts a _glossa_ (gloss) was a short note written beside the text or between its lines, explaining or translating a word right where the reader met it. Glossa does the same: a small translation next to the text you are reading.
 
 ## License
 
