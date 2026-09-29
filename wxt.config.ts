@@ -1,8 +1,9 @@
 import { defineConfig } from 'wxt';
-import { ALL_SITES } from './src/lib/all-sites';
 
 export default defineConfig({
   srcDir: 'src',
+  // Visible in the macOS file picker, unlike .output, for Load unpacked.
+  outDir: 'out',
   modules: ['@wxt-dev/module-svelte'],
   // Explicit imports keep every module readable on its own.
   imports: false,
@@ -19,25 +20,14 @@ export default defineConfig({
       'scripting',
       'storage',
     ],
-    host_permissions: ['https://openrouter.ai/*', 'http://localhost/*', 'http://127.0.0.1/*'],
-    // Requested at runtime: all sites for the Selection Icon (ADR 0004),
-    // specific origins for Local Providers outside localhost.
-    optional_host_permissions: ALL_SITES,
+    // All sites: the Selection Icon runs everywhere (ADR 0005), and Local
+    // Providers may live anywhere on the user's network.
+    host_permissions: ['<all_urls>'],
     commands: {
       'translate-selection': {
         suggested_key: { default: 'Alt+Shift+T' },
         description: '__MSG_commandTranslateSelection__',
       },
-    },
-  },
-  hooks: {
-    // The content script uses `registration: 'runtime'`, which makes WXT add its
-    // matches to the required host permissions. Keep them optional instead.
-    'build:manifestGenerated': (_wxt, manifest) => {
-      const mv3 = manifest as { host_permissions?: string[] };
-      mv3.host_permissions = mv3.host_permissions?.filter(
-        (pattern) => pattern !== '<all_urls>' && !ALL_SITES.includes(pattern),
-      );
     },
   },
 });

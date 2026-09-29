@@ -21,10 +21,10 @@ const ICON_OFFSET = 2;
 const BUBBLE_WIDTH = 420;
 
 export default defineContentScript({
-  // Never in the manifest: injected on demand through activeTab, or registered
-  // on all sites once the user turns on the Selection Icon (ADR 0004).
+  // Everywhere, for the Selection Icon (ADR 0005). Pages opened before install
+  // get the script injected on demand by the background.
   matches: ['<all_urls>'],
-  registration: 'runtime',
+  runAt: 'document_idle',
   cssInjectionMode: 'manual',
 
   main(ctx) {
@@ -76,8 +76,7 @@ export default defineContentScript({
 
     browser.runtime.onMessage.addListener((message: unknown) => {
       if (!isMessage<ShowBubbleMessage>(message, 'glossa:show-bubble')) return;
-      const snapshot = snapshotSelection() ?? fallbackSnapshot(message.selectionText);
-      if (snapshot) void openBubble(snapshot);
+      void openBubble(snapshotSelection() ?? fallbackSnapshot(message.selectionText));
     });
 
     const isOurs = (event: Event) =>
@@ -111,10 +110,14 @@ function iconAllowed(prefs: Prefs): boolean {
   return prefs.selectionIcon && !prefs.disabledSites.includes(location.hostname);
 }
 
-function fallbackSnapshot(text: string | undefined): SelectionSnapshot | null {
-  if (!text?.trim()) return null;
+/**
+ * Used when the page's own selection is gone, e.g. inside a PDF viewer. With
+ * no text at all the Bubble still opens and asks the user to select something,
+ * so the shortcut never fails silently.
+ */
+function fallbackSnapshot(text: string | undefined): SelectionSnapshot {
   const rect = new DOMRect((window.innerWidth - BUBBLE_WIDTH) / 2, 80, 0, 0);
-  return { text: text.trim(), rect, context: null };
+  return { text: text?.trim() ?? '', rect, context: null };
 }
 
 async function overlay(

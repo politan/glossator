@@ -16,7 +16,7 @@ export const DEFAULT_PREFS: Prefs = {
   target: 'pl',
   fallback: 'en',
   useSurroundingContext: false,
-  selectionIcon: false,
+  selectionIcon: true,
   disabledSites: [],
 };
 
@@ -40,7 +40,14 @@ export const DEFAULT_PROVIDER_SETTINGS: ProviderSettings = {
   locals: [],
 };
 
-export const prefsItem = storage.defineItem<Prefs>('sync:prefs', { fallback: DEFAULT_PREFS });
+export const prefsItem = storage.defineItem<Prefs>('sync:prefs', {
+  fallback: DEFAULT_PREFS,
+  version: 2,
+  migrations: {
+    // The Selection Icon became on by default (ADR 0005).
+    2: (prefs: Prefs): Prefs => ({ ...prefs, selectionIcon: true }),
+  },
+});
 
 export const providersItem = storage.defineItem<ProviderSettings>('local:providers', {
   fallback: DEFAULT_PROVIDER_SETTINGS,

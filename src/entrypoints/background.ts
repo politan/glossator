@@ -1,11 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
 import {
-  CONTENT_SCRIPT_FILE,
-  hasAllSitesAccess,
-  syncSelectionIconRegistration,
-} from '@/lib/content-script-registration';
-import {
   TRANSLATE_PORT,
   isMessage,
   type BackgroundMessage,
@@ -13,16 +8,12 @@ import {
   type TranslateRequest,
 } from '@/lib/messages';
 import { syncOriginRules } from '@/lib/providers/origin-sync';
-import {
-  loadPrefs,
-  prefsItem,
-  providersItem,
-  updatePrefs,
-  type ProviderSettings,
-} from '@/lib/settings';
+import { providersItem, type ProviderSettings } from '@/lib/settings';
 import { runTranslation } from '@/lib/translate-session';
 
 const MENU_ID = 'glossa-translate-selection';
+const CONTENT_SCRIPT_FILE = '/content-scripts/content.js';
+const TOP_FRAME = 0;
 
 export default defineBackground(() => {
   // API Keys live in storage.local; keep that area out of content scripts' reach (ADR 0001).
@@ -41,12 +32,13 @@ export default defineBackground(() => {
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId !== MENU_ID || !tab?.id) return;
-    void showBubble(tab.id, info.frameId ?? 0, info.selectionText);
+    void showBubble(tab.id, info.frameId ?? TOP_FRAME, info.selectionText);
   });
 
   browser.commands.onCommand.addListener((command, tab) => {
     if (command !== 'translate-selection' || !tab?.id) return;
-    void showBubble(tab.id, 0);
+    const tabId = tab.id;
+    void frameWithSelection(tabId).then((frameId) => showBubble(tabId, frameId));
   });
 
   browser.runtime.onMessage.addListener((message: unknown) => {
@@ -76,21 +68,33 @@ export default defineBackground(() => {
   const syncSavedOriginRules = (settings: ProviderSettings) =>
     syncOriginRules(settings.locals.map((p) => p.baseUrl));
   providersItem.watch((settings) => void syncSavedOriginRules(settings));
-  prefsItem.watch((prefs) => void syncSelectionIconRegistration(prefs.selectionIcon));
-  browser.permissions.onRemoved.addListener(() => {
-    void loadPrefs().then(async (prefs) => {
-      await syncSelectionIconRegistration(prefs.selectionIcon);
-      if (prefs.selectionIcon && !(await hasAllSitesAccess())) {
-        await updatePrefs({ selectionIcon: false });
-      }
-    });
-  });
-
   void providersItem.getValue().then(syncSavedOriginRules);
-  void loadPrefs().then((prefs) => syncSelectionIconRegistration(prefs.selectionIcon));
 });
 
-/** Opens the Bubble in a tab, injecting the content script first when it is not there yet. */
+/**
+ * The shortcut does not say where the selection is, and it may sit in an
+ * iframe. Asks every frame and falls back to the top one, which then tells the
+ * user to select something.
+ */
+async function frameWithSelection(tabId: number): Promise<number> {
+  try {
+    const results = await browser.scripting.executeScript({
+      target: { tabId, allFrames: true },
+      func: () => {
+        const field = document.activeElement;
+        if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+          return (field.selectionEnd ?? 0) > (field.selectionStart ?? 0);
+        }
+        return Boolean(window.getSelection()?.toString().trim());
+      },
+    });
+    return results.find((r) => r.result === true)?.frameId ?? TOP_FRAME;
+  } catch {
+    return TOP_FRAME;
+  }
+}
+
+/** Opens the Bubble in a frame, injecting the content script first when it is not there yet. */
 async function showBubble(tabId: number, frameId: number, selectionText?: string): Promise<void> {
   const message: ShowBubbleMessage = { type: 'glossa:show-bubble', selectionText };
   try {

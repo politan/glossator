@@ -270,9 +270,6 @@
   "localSave": {
     "message": "Zapisz"
   },
-  "localPermissionDenied": {
-    "message": "Glossa potrzebuje uprawnienia, aby łączyć się z tym adresem."
-  },
   "presetOllamaHint": {
     "message": "Działa bez dodatkowej konfiguracji."
   },
@@ -330,18 +327,21 @@
     "message": "Pokazuj ikonę tłumaczenia przy zaznaczonym tekście na każdej stronie"
   },
   "selectionIconHint": {
-    "message": "Wymaga dostępu do wszystkich stron, żeby ikona mogła się pojawić. Bez tego używaj menu kontekstowego lub skrótu klawiszowego."
+    "message": "Mała ikona przy zaznaczonym tekście otwiera tłumaczenie. Bez niej używaj menu kontekstowego lub skrótu klawiszowego."
   },
   "sectionShortcut": {
     "message": "Skrót klawiszowy"
   },
   "shortcutHint": {
-    "message": "Domyślnie: Alt+Shift+T. Zmienisz go na stronie skrótów rozszerzeń przeglądarki."
+    "message": "Sugerowany: Alt+Shift+T (Option+Shift+T na Macu). Zmienisz go na stronie skrótów rozszerzeń przeglądarki."
   },
   "shortcutOpen": {
     "message": "Zmień skrót"
   },
   "saved": {
     "message": "Zapisano"
+  },
+  "shortcutMissing": {
+    "message": "Skrót nie jest ustawiony. Przeglądarka zostawia go pustym, gdy inne rozszerzenie używa tych samych klawiszy. Wybierz go na stronie skrótów."
   }
 }

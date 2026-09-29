@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { browser } from 'wxt/browser';
-  import { ALL_SITES } from '@/lib/all-sites';
   import { t, uiLocale } from '@/lib/i18n';
   import { isSupported, languageName, languagesFor } from '@/lib/languages';
   import { PROMPT_PROFILES } from '@/lib/prompts/profiles';
@@ -34,6 +33,8 @@
   let keyStatus = $state<{ ok: boolean; text: string } | null>(null);
   let checkingKey = $state(false);
   let customModelChosen = $state(false);
+  /** Empty when the browser left the shortcut unassigned, e.g. after a conflict. */
+  let shortcut = $state<string | null>(null);
 
   const choices = $derived(providerChoices(settings));
   const profile = $derived(activeProfile(settings));
@@ -52,13 +53,18 @@
       settings = await providersItem.getValue();
       apiKey = settings.cloud.apiKey;
       loaded = true;
+      await loadShortcut();
     })();
     // Stay in sync with changes made in the Toolbar Popup.
     const unwatchProviders = providersItem.watch((value) => (settings = value));
     const unwatchPrefs = prefsItem.watch((value) => (prefs = { ...DEFAULT_PREFS, ...value }));
+    // The shortcut is changed on the browser's own page; refresh when coming back.
+    const onFocus = () => void loadShortcut();
+    window.addEventListener('focus', onFocus);
     return () => {
       unwatchProviders();
       unwatchPrefs();
+      window.removeEventListener('focus', onFocus);
     };
   });
 
@@ -157,19 +163,9 @@
     }));
   }
 
-  async function toggleSelectionIcon(event: Event) {
-    const checkbox = event.currentTarget as HTMLInputElement;
-    const enabled = checkbox.checked;
-    if (enabled && !(await browser.permissions.request({ origins: ALL_SITES }))) {
-      checkbox.checked = false;
-      return;
-    }
-    // A Local Provider outside localhost may rely on the same grant, so keep it then.
-    const needsGrant = settings.locals.some(
-      (p) => !/^https?:\/\/(localhost|127\.0\.0\.1)[:/]/.test(p.baseUrl),
-    );
-    if (!enabled && !needsGrant) await browser.permissions.remove({ origins: ALL_SITES });
-    await savePrefs({ selectionIcon: enabled });
+  async function loadShortcut() {
+    const command = (await browser.commands.getAll()).find((c) => c.name === 'translate-selection');
+    shortcut = command?.shortcut ?? '';
   }
 
   async function startWith(kind: 'local' | 'cloud') {
@@ -201,13 +197,6 @@
           <span class="cta">{t('onboardingChoose')} →</span>
         </button>
       </div>
-      <label class="check">
-        <input type="checkbox" checked={prefs.selectionIcon} onchange={toggleSelectionIcon} />
-        <span>
-          {t('selectionIconToggle')}
-          <span class="hint">{t('selectionIconHint')}</span>
-        </span>
-      </label>
     </section>
   {/if}
 
@@ -360,7 +349,11 @@
   <section>
     <h2>{t('sectionSelectionIcon')}</h2>
     <label class="check">
-      <input type="checkbox" checked={prefs.selectionIcon} onchange={toggleSelectionIcon} />
+      <input
+        type="checkbox"
+        checked={prefs.selectionIcon}
+        onchange={(e) => savePrefs({ selectionIcon: e.currentTarget.checked })}
+      />
       <span>
         {t('selectionIconToggle')}
         <span class="hint">{t('selectionIconHint')}</span>
@@ -370,6 +363,11 @@
 
   <section>
     <h2>{t('sectionShortcut')}</h2>
+    {#if shortcut}
+      <p><kbd>{shortcut}</kbd></p>
+    {:else if shortcut === ''}
+      <p class="status error">{t('shortcutMissing')}</p>
+    {/if}
     <p class="hint">{t('shortcutHint')}</p>
     <div>
       <button
@@ -469,5 +467,14 @@
 
   .status.error {
     color: var(--g-danger);
+  }
+
+  kbd {
+    font: inherit;
+    font-weight: 600;
+    padding: 2px 8px;
+    border: 1px solid var(--g-border);
+    border-radius: 6px;
+    background: var(--g-bg-subtle);
   }
 </style>

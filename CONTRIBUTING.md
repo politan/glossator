@@ -11,7 +11,7 @@ pnpm install
 pnpm dev
 ```
 
-`pnpm dev` opens a browser profile with the extension loaded and reloads it on change. To try a production build in Brave, run `pnpm build` and load `.output/chrome-mv3` with **Load unpacked**.
+`pnpm dev` opens a browser profile with the extension loaded and reloads it on change. To try a production build in Brave, run `pnpm build` and load `out/chrome-mv3` with **Load unpacked**; after later builds, click the reload button on the extensions page.
 
 ## Before you open a pull request
 

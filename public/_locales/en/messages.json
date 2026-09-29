@@ -270,9 +270,6 @@
   "localSave": {
     "message": "Save"
   },
-  "localPermissionDenied": {
-    "message": "Glossa needs permission to reach this address."
-  },
   "presetOllamaHint": {
     "message": "Works without extra setup."
   },
@@ -330,18 +327,21 @@
     "message": "Show a translate icon next to selected text on every page"
   },
   "selectionIconHint": {
-    "message": "Needs access to all sites so the icon can appear. Without it, use the right-click menu or the keyboard shortcut."
+    "message": "A small icon next to selected text opens the translation. Without it, use the right-click menu or the keyboard shortcut."
   },
   "sectionShortcut": {
     "message": "Keyboard shortcut"
   },
   "shortcutHint": {
-    "message": "Default: Alt+Shift+T. Change it on the browser's extension shortcuts page."
+    "message": "Suggested: Alt+Shift+T (Option+Shift+T on a Mac). You can change it on the browser's extension shortcuts page."
   },
   "shortcutOpen": {
     "message": "Change shortcut"
   },
   "saved": {
     "message": "Saved"
+  },
+  "shortcutMissing": {
+    "message": "No shortcut is set. The browser leaves it empty when another extension already uses the same keys. Pick one on the shortcuts page."
   }
 }

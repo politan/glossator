@@ -38,7 +38,7 @@ Every translation shows a small badge saying which one was used. Glossa never sw
 
 ## Features
 
-- **Translate a selection in place.** Right-click → _Translate with Glossa_, press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>, or turn on the optional icon that appears next to selected text.
+- **Translate a selection in place.** Click the small icon that appears next to selected text, right-click → _Translate with Glossa_, or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> (<kbd>⌥</kbd><kbd>⇧</kbd><kbd>T</kbd> on a Mac).
 - **Streaming.** The translation appears as the model writes it.
 - **Local models first.** Presets for [Ollama](https://ollama.com), [LM Studio](https://lmstudio.ai), [llama.cpp](https://github.com/ggml-org/llama.cpp) and [Jan](https://jan.ai), plus any OpenAI-compatible server. Ollama works without touching `OLLAMA_ORIGINS`.
 - **Dedicated translation models.** Defaults to Tencent's [Hy-MT2](https://huggingface.co/tencent/Hy-MT2-30B-A3B) on OpenRouter, and speaks the prompt formats of Hy-MT and Google's [TranslateGemma](https://ollama.com/library/translategemma) as well as general chat models.
@@ -46,7 +46,7 @@ Every translation shows a small badge saying which one was used. Glossa never sw
 - **Optional surrounding context** for ambiguous words, off by default.
 - **Private by default.** OpenRouter requests use zero-data-retention routing, the API key never reaches web pages, and there is no history or telemetry.
 - **Light and dark**, following your system. Interface in English and Polish.
-- **Minimal permissions.** Installing does not ask for access to all websites; only the optional selection icon does.
+- **No surprises in permissions.** Glossa asks for access to all sites so the icon can appear next to any selection and so it can reach a model server anywhere on your network. It reads a page only when you select text, and you can hide the icon per site or turn it off.
 
 ## Install
 
@@ -77,7 +77,7 @@ Recommended local models:
 | `hf.co/tencent/Hy-MT2-7B-GGUF:Q4_K_M`      | ~4.6 GB | Dedicated MT model, 38 languages           |
 | `hf.co/tencent/Hy-MT2-30B-A3B-GGUF:Q4_K_M` | ~18 GB  | Best local quality, needs a strong machine |
 
-Any address on `localhost` or your private network is labelled **Local**. A server elsewhere on the internet is labelled **Self-hosted**; Glossa asks for permission to reach it when you save it.
+Any address on `localhost` or your private network is labelled **Local**. A server elsewhere on the internet is labelled **Self-hosted**.
 
 ## Set up OpenRouter (easiest)
 
@@ -117,6 +117,8 @@ launchctl setenv OLLAMA_ORIGINS "chrome-extension://*"
 # Linux (systemd): add Environment="OLLAMA_ORIGINS=chrome-extension://*" to the ollama service
 ```
 
+**The keyboard shortcut does nothing.** Browsers only assign a suggested shortcut when nothing else uses it. Settings shows whether one is set; if not, pick one at `brave://extensions/shortcuts` (or `chrome://extensions/shortcuts`).
+
 **LM Studio does not answer.** Turn on **Enable CORS** in LM Studio's server settings.
 
 **The first translation takes long.** Local servers load the model into memory on first use. Glossa waits up to two minutes and shows _Loading model…_ meanwhile.
@@ -131,7 +133,7 @@ Requires Node 24 and pnpm (via Corepack).
 pnpm install
 pnpm dev        # launches a browser with the extension and live reload
 pnpm verify     # format check, lint, svelte-check, tests, build
-pnpm zip        # .output/glossa-<version>-chrome.zip
+pnpm zip        # out/glossa-<version>-chrome.zip
 ```
 
 Built with [WXT](https://wxt.dev), [Svelte 5](https://svelte.dev) and TypeScript. The vocabulary lives in [CONTEXT.md](CONTEXT.md) and design decisions in [docs/adr](docs/adr). See [CONTRIBUTING.md](CONTRIBUTING.md).

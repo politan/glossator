@@ -6,7 +6,7 @@ import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 
 export default ts.config(
-  { ignores: ['.output/', '.wxt/', 'coverage/', 'pnpm-lock.yaml'] },
+  { ignores: ['out/', '.wxt/', 'coverage/', 'pnpm-lock.yaml'] },
   js.configs.recommended,
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,

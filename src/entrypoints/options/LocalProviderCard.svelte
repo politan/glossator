@@ -1,6 +1,5 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { browser } from 'wxt/browser';
   import { t } from '@/lib/i18n';
   import { PROMPT_PROFILES } from '@/lib/prompts/profiles';
   import { PRESETS, RECOMMENDED_LOCAL_MODELS, presetById } from '@/lib/providers/presets';
@@ -41,24 +40,7 @@
     }
   }
 
-  /** localhost is granted at install; any other address needs the user's consent. */
-  async function ensureAccess(): Promise<boolean> {
-    let origin: string;
-    try {
-      origin = new URL(draft.baseUrl).origin;
-    } catch {
-      return false;
-    }
-    const host = new URL(origin).hostname;
-    if (host === 'localhost' || host === '127.0.0.1') return true;
-    return browser.permissions.request({ origins: [`${origin}/*`] });
-  }
-
   async function test() {
-    if (!(await ensureAccess())) {
-      status = { ok: false, text: t('localPermissionDenied') };
-      return;
-    }
     testing = true;
     status = null;
     try {
@@ -79,10 +61,6 @@
   }
 
   async function save() {
-    if (!(await ensureAccess())) {
-      status = { ok: false, text: t('localPermissionDenied') };
-      return;
-    }
     await onsave($state.snapshot(draft));
     status = { ok: true, text: t('saved') };
   }
