@@ -5,7 +5,7 @@ import { buildMessages, profileOf } from './prompts/profiles';
 import { privacyOf } from './providers/privacy';
 import type { Provider } from './providers/types';
 import { activeProvider, loadPrefs, providerName, providersItem } from './settings';
-import { TranslationError, streamTranslation } from './translation/client';
+import { TranslationError, streamTranslation, type Usage } from './translation/client';
 
 const CACHE_LIMIT = 100;
 // Session-only cache so re-selecting the same text costs nothing. Never persisted.
@@ -69,7 +69,7 @@ export async function runTranslation(
   const cached = cache.get(key);
   if (cached !== undefined) {
     emit({ type: 'delta', text: cached });
-    emit({ type: 'done' });
+    emit({ type: 'done', usage: null, cached: true });
     return;
   }
 
@@ -80,8 +80,12 @@ export async function runTranslation(
     ...(context ? { context } : {}),
   });
   let translation = '';
+  let usage: Usage | null = null;
   try {
-    for await (const piece of streamTranslation(provider, messages, { signal })) {
+    const onUsage = (reported: Usage) => {
+      usage = reported;
+    };
+    for await (const piece of streamTranslation(provider, messages, { signal, onUsage })) {
       translation += piece;
       emit({ type: 'delta', text: piece });
     }
@@ -93,7 +97,7 @@ export async function runTranslation(
   }
   if (signal.aborted) return;
   remember(key, translation.trim());
-  emit({ type: 'done' });
+  emit({ type: 'done', usage, cached: false });
 }
 
 // Short selections, the usual case, rarely come back as "reliable", but a
