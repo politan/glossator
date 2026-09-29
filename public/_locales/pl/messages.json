@@ -1,0 +1,347 @@
+{
+  "extName": {
+    "message": "Glossa"
+  },
+  "extDescription": {
+    "message": "Tłumacz zaznaczony tekst w małym dymku, lokalnym modelem albo własnym kluczem OpenRouter."
+  },
+  "commandTranslateSelection": {
+    "message": "Przetłumacz zaznaczony tekst"
+  },
+  "contextMenuTranslate": {
+    "message": "Przetłumacz z Glossa"
+  },
+  "selectionIconLabel": {
+    "message": "Przetłumacz z Glossa"
+  },
+  "bubbleTranslating": {
+    "message": "Tłumaczę…"
+  },
+  "bubbleLoadingModel": {
+    "message": "Ładuję model…"
+  },
+  "bubbleCopy": {
+    "message": "Kopiuj"
+  },
+  "bubbleCopied": {
+    "message": "Skopiowano"
+  },
+  "bubbleRetry": {
+    "message": "Ponów"
+  },
+  "bubbleClose": {
+    "message": "Zamknij"
+  },
+  "bubbleTarget": {
+    "message": "Tłumacz na"
+  },
+  "badgeLocal": {
+    "message": "Lokalnie"
+  },
+  "badgeSelfHosted": {
+    "message": "Własny serwer"
+  },
+  "badgeCloud": {
+    "message": "Chmura"
+  },
+  "errorNotConfigured": {
+    "message": "Wybierz, skąd mają pochodzić tłumaczenia, aby zacząć."
+  },
+  "errorEmpty": {
+    "message": "Najpierw zaznacz tekst."
+  },
+  "errorTooLong": {
+    "message": "Zaznaczenie jest za długie. Glossa tłumaczy do $LIMIT$ znaków naraz.",
+    "placeholders": {
+      "limit": {
+        "content": "$1"
+      }
+    }
+  },
+  "errorUnauthorized": {
+    "message": "Klucz API został odrzucony. Sprawdź go w ustawieniach."
+  },
+  "errorInsufficientCredits": {
+    "message": "Na koncie OpenRouter skończyły się kredyty."
+  },
+  "errorModeration": {
+    "message": "OpenRouter odmówił przetłumaczenia tego tekstu."
+  },
+  "errorOriginRejected": {
+    "message": "Lokalny serwer odrzucił żądanie. Zobacz sekcję Troubleshooting w README (OLLAMA_ORIGINS)."
+  },
+  "errorModelNotFound": {
+    "message": "Ten serwer nie ma wybranego modelu. Pobierz go albo wybierz inny w ustawieniach."
+  },
+  "errorTimeout": {
+    "message": "Serwer odpowiadał zbyt długo."
+  },
+  "errorRateLimited": {
+    "message": "Zbyt wiele zapytań. Poczekaj chwilę i ponów."
+  },
+  "errorUnavailable": {
+    "message": "Model jest chwilowo niedostępny. Spróbuj za moment."
+  },
+  "errorBadRequest": {
+    "message": "Serwer odrzucił żądanie."
+  },
+  "errorUnreachable": {
+    "message": "Nie mogę połączyć się z serwerem. Czy jest uruchomiony?"
+  },
+  "errorUnknown": {
+    "message": "Coś poszło nie tak."
+  },
+  "actionOpenSettings": {
+    "message": "Otwórz ustawienia"
+  },
+  "actionTryCloud": {
+    "message": "Spróbuj przez OpenRouter (wyśle tekst do chmury)"
+  },
+  "languageAuto": {
+    "message": "Wykryj język"
+  },
+  "popupFrom": {
+    "message": "Z"
+  },
+  "popupTo": {
+    "message": "Na"
+  },
+  "popupFallback": {
+    "message": "Jeśli tekst już jest w tym języku, na"
+  },
+  "popupSwap": {
+    "message": "Zamień języki"
+  },
+  "popupProvider": {
+    "message": "Tłumacz przez"
+  },
+  "popupNothingConfigured": {
+    "message": "Nic jeszcze nie skonfigurowano."
+  },
+  "popupHideOnSite": {
+    "message": "Ukryj ikonę na $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSettings": {
+    "message": "Ustawienia"
+  },
+  "settingsTitle": {
+    "message": "Ustawienia Glossa"
+  },
+  "onboardingTitle": {
+    "message": "Skąd mają pochodzić tłumaczenia?"
+  },
+  "onboardingIntro": {
+    "message": "Glossa nie ma własnego serwera. Wybierz, dokąd wysyłać zaznaczony tekst; drugą opcję możesz dodać później."
+  },
+  "onboardingLocalTitle": {
+    "message": "Lokalnie: najbardziej prywatnie"
+  },
+  "onboardingLocalBody": {
+    "message": "Tekst nie opuszcza komputera. Wymaga Ollamy, LM Studio lub podobnego serwera z modelem do tłumaczeń."
+  },
+  "onboardingCloudTitle": {
+    "message": "OpenRouter: najprościej"
+  },
+  "onboardingCloudBody": {
+    "message": "Wklej klucz API OpenRoutera i gotowe. Tekst idzie przez OpenRouter do hosta modelu, domyślnie tylko do hostów, które go nie przechowują."
+  },
+  "onboardingChoose": {
+    "message": "Skonfiguruj"
+  },
+  "sectionProvider": {
+    "message": "Aktywny provider"
+  },
+  "sectionProviderHint": {
+    "message": "Glossa używa tylko wybranego tutaj providera. Nigdy sama nie przełącza się na chmurę."
+  },
+  "providerNone": {
+    "message": "Jeszcze nic nie skonfigurowano"
+  },
+  "sectionCloud": {
+    "message": "OpenRouter"
+  },
+  "cloudKey": {
+    "message": "Klucz API"
+  },
+  "cloudKeyHint": {
+    "message": "Przechowywany tylko w tym profilu przeglądarki. Utworzysz go na openrouter.ai/keys."
+  },
+  "cloudKeyCheck": {
+    "message": "Zapisz i sprawdź"
+  },
+  "cloudKeyChecking": {
+    "message": "Sprawdzam…"
+  },
+  "cloudKeyOk": {
+    "message": "Klucz działa. Pozostały kredyt: $CREDIT$.",
+    "placeholders": {
+      "credit": {
+        "content": "$1"
+      }
+    }
+  },
+  "cloudKeyOkUnlimited": {
+    "message": "Klucz działa. Bez limitu wydatków."
+  },
+  "cloudModel": {
+    "message": "Model"
+  },
+  "cloudModelCustom": {
+    "message": "Własny identyfikator modelu…"
+  },
+  "cloudModelCustomHint": {
+    "message": "Dowolny identyfikator z openrouter.ai/models. Ty decydujesz, dokąd trafia tekst."
+  },
+  "cloudStrictPrivacy": {
+    "message": "Ścisły tryb prywatności"
+  },
+  "cloudStrictPrivacyHint": {
+    "message": "Tylko hosty, które nie przechowują tekstu i nie trenują na nim. Część modeli będzie niedostępna."
+  },
+  "modelNoteDefault": {
+    "message": "dedykowany model do tłumaczeń, domyślny"
+  },
+  "modelNoteSmaller": {
+    "message": "dedykowany model do tłumaczeń, mniejszy"
+  },
+  "modelNoteCheapest": {
+    "message": "dedykowany model do tłumaczeń, najtańszy"
+  },
+  "modelNoteGemma": {
+    "message": "otwarte wagi, niezależni hostujący, więcej języków"
+  },
+  "sectionLocal": {
+    "message": "Serwery lokalne"
+  },
+  "localHint": {
+    "message": "Dowolny serwer z API zgodnym z OpenAI. Adresy lokalne i z sieci prywatnej są oznaczane jako Lokalnie, pozostałe jako Własny serwer."
+  },
+  "localAdd": {
+    "message": "Dodaj serwer"
+  },
+  "localName": {
+    "message": "Nazwa"
+  },
+  "localPreset": {
+    "message": "Rodzaj serwera"
+  },
+  "localBaseUrl": {
+    "message": "Adres"
+  },
+  "localKey": {
+    "message": "Klucz API (opcjonalnie)"
+  },
+  "localModel": {
+    "message": "Model"
+  },
+  "localModelPlaceholder": {
+    "message": "np. translategemma:4b"
+  },
+  "localTest": {
+    "message": "Testuj połączenie"
+  },
+  "localTesting": {
+    "message": "Testuję…"
+  },
+  "localTestOk": {
+    "message": "Połączono. Dostępnych modeli: $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "localTestMissing": {
+    "message": "Połączono, ale brakuje tego modelu. W Ollamie uruchom: ollama pull $MODEL$",
+    "placeholders": {
+      "model": {
+        "content": "$1"
+      }
+    }
+  },
+  "localRemove": {
+    "message": "Usuń"
+  },
+  "localSave": {
+    "message": "Zapisz"
+  },
+  "localPermissionDenied": {
+    "message": "Glossa potrzebuje uprawnienia, aby łączyć się z tym adresem."
+  },
+  "presetOllamaHint": {
+    "message": "Działa bez dodatkowej konfiguracji."
+  },
+  "presetLmStudioHint": {
+    "message": "Włącz \"Enable CORS\" w ustawieniach serwera LM Studio."
+  },
+  "presetLlamaCppHint": {
+    "message": "Uruchom llama-server z modelem, którego chcesz używać."
+  },
+  "presetJanHint": {
+    "message": "Uruchom lokalny serwer API w Janie."
+  },
+  "presetCustomHint": {
+    "message": "Dowolny endpoint zgodny z OpenAI, np. vLLM."
+  },
+  "presetCustom": {
+    "message": "Inny (zgodny z OpenAI)"
+  },
+  "promptProfile": {
+    "message": "Profil promptu"
+  },
+  "promptProfileAuto": {
+    "message": "Automatycznie"
+  },
+  "sectionLanguages": {
+    "message": "Języki"
+  },
+  "languagesSource": {
+    "message": "Tłumacz z"
+  },
+  "languagesTarget": {
+    "message": "Tłumacz na"
+  },
+  "languagesFallback": {
+    "message": "Jeśli tekst już jest w tym języku, tłumacz na"
+  },
+  "languagesUnsupported": {
+    "message": "Bieżący model nie obsługuje języka: $LANGUAGE$.",
+    "placeholders": {
+      "language": {
+        "content": "$1"
+      }
+    }
+  },
+  "surroundingContext": {
+    "message": "Wysyłaj otaczający kontekst"
+  },
+  "surroundingContextHint": {
+    "message": "Wysyła też akapit wokół zaznaczenia, co pomaga przy wieloznacznych słowach. Domyślnie wyłączone, bo wysyła więcej treści strony."
+  },
+  "sectionSelectionIcon": {
+    "message": "Ikona przy zaznaczeniu"
+  },
+  "selectionIconToggle": {
+    "message": "Pokazuj ikonę tłumaczenia przy zaznaczonym tekście na każdej stronie"
+  },
+  "selectionIconHint": {
+    "message": "Wymaga dostępu do wszystkich stron, żeby ikona mogła się pojawić. Bez tego używaj menu kontekstowego lub skrótu klawiszowego."
+  },
+  "sectionShortcut": {
+    "message": "Skrót klawiszowy"
+  },
+  "shortcutHint": {
+    "message": "Domyślnie: Alt+Shift+T. Zmienisz go na stronie skrótów rozszerzeń przeglądarki."
+  },
+  "shortcutOpen": {
+    "message": "Zmień skrót"
+  },
+  "saved": {
+    "message": "Zapisano"
+  }
+}

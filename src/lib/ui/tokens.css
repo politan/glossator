@@ -1,0 +1,39 @@
+/* Shared design tokens. Imported by every Glossa surface. */
+.glossa-theme {
+  --g-bg: #ffffff;
+  --g-bg-subtle: #f5f6f8;
+  --g-border: #dfe2e7;
+  --g-text: #1b1e24;
+  --g-text-muted: #5d6470;
+  --g-accent: #3b5bdb;
+  --g-accent-contrast: #ffffff;
+  --g-local: #2b8a3e;
+  --g-local-bg: #ebfbee;
+  --g-cloud-bg: #eef1f6;
+  --g-danger: #c92a2a;
+  --g-shadow: 0 8px 28px rgb(15 20 30 / 18%), 0 1px 3px rgb(15 20 30 / 12%);
+  --g-radius: 10px;
+  --g-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  color: var(--g-text);
+  font-family: var(--g-font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .glossa-theme {
+    --g-bg: #1c1f26;
+    --g-bg-subtle: #252932;
+    --g-border: #353a45;
+    --g-text: #e8eaee;
+    --g-text-muted: #a2a9b6;
+    --g-accent: #7c93f2;
+    --g-accent-contrast: #10131a;
+    --g-local: #69db7c;
+    --g-local-bg: #1e3325;
+    --g-cloud-bg: #2a2f3a;
+    --g-danger: #ff8787;
+    --g-shadow: 0 8px 28px rgb(0 0 0 / 50%), 0 1px 3px rgb(0 0 0 / 40%);
+  }
+}

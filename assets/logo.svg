@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Glossa">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4c6ef5" />
+      <stop offset="1" stop-color="#2f44b8" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)" />
+  <path
+    d="M40 28h48a14 14 0 0 1 14 14v28a14 14 0 0 1-14 14H68L50 100V84H40a14 14 0 0 1-14-14V42a14 14 0 0 1 14-14z"
+    fill="#ffffff"
+  />
+  <path
+    d="M75.5 46.4A16 16 0 1 0 79.8 60H66"
+    fill="none"
+    stroke="#3b5bdb"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
