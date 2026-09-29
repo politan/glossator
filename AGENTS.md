@@ -1,4 +1,4 @@
-# Glossa agent guide
+# Glossator agent guide
 
 Chromium MV3 extension (WXT + Svelte 5 + TypeScript) that translates a selection through a Local Provider or OpenRouter.
 

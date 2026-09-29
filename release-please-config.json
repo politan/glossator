@@ -3,7 +3,7 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "package-name": "glossa",
+      "package-name": "glossator",
       "bump-minor-pre-major": true,
       "include-component-in-tag": false
     }

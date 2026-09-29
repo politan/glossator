@@ -89,7 +89,7 @@
   }
 
   function openSettings() {
-    const message: BackgroundMessage = { type: 'glossa:open-settings' };
+    const message: BackgroundMessage = { type: 'glossator:open-settings' };
     void browser.runtime.sendMessage(message);
     onclose();
   }
@@ -115,7 +115,7 @@
         </select>
       </label>
     {:else}
-      <span class="brand">Glossa</span>
+      <span class="brand">Glossator</span>
     {/if}
     <button class="icon-button" type="button" aria-label={t('bubbleClose')} onclick={onclose}>
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>

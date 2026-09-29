@@ -11,7 +11,7 @@ import { syncOriginRules } from '@/lib/providers/origin-sync';
 import { providersItem, type ProviderSettings } from '@/lib/settings';
 import { runTranslation } from '@/lib/translate-session';
 
-const MENU_ID = 'glossa-translate-selection';
+const MENU_ID = 'glossator-translate-selection';
 const CONTENT_SCRIPT_FILE = '/content-scripts/content.js';
 const TOP_FRAME = 0;
 
@@ -42,7 +42,7 @@ export default defineBackground(() => {
   });
 
   browser.runtime.onMessage.addListener((message: unknown) => {
-    if (isMessage<BackgroundMessage>(message, 'glossa:open-settings')) {
+    if (isMessage<BackgroundMessage>(message, 'glossator:open-settings')) {
       void browser.runtime.openOptionsPage();
     }
   });
@@ -96,7 +96,7 @@ async function frameWithSelection(tabId: number): Promise<number> {
 
 /** Opens the Bubble in a frame, injecting the content script first when it is not there yet. */
 async function showBubble(tabId: number, frameId: number, selectionText?: string): Promise<void> {
-  const message: ShowBubbleMessage = { type: 'glossa:show-bubble', selectionText };
+  const message: ShowBubbleMessage = { type: 'glossator:show-bubble', selectionText };
   try {
     await browser.tabs.sendMessage(tabId, message, { frameId });
   } catch {

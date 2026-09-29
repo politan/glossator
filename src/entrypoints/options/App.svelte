@@ -70,7 +70,7 @@
 
   /**
    * Saves a change. A Provider the user just set up becomes active only when
-   * nothing is active yet; Glossa never picks one on its own (ADR 0002).
+   * nothing is active yet; Glossator never picks one on its own (ADR 0002).
    */
   async function saveSettings(
     change: (current: ProviderSettings) => ProviderSettings,

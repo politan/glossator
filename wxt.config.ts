@@ -11,7 +11,7 @@ export default defineConfig({
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
     default_locale: 'en',
-    homepage_url: 'https://github.com/politan/glossa',
+    homepage_url: 'https://github.com/politan/glossator',
     minimum_chrome_version: '121',
     permissions: [
       'activeTab',

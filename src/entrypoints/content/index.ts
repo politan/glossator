@@ -29,9 +29,9 @@ export default defineContentScript({
 
   main(ctx) {
     // The script can be injected again on demand; keep a single instance per page.
-    const page = window as { __glossaLoaded?: boolean };
-    if (page.__glossaLoaded) return;
-    page.__glossaLoaded = true;
+    const page = window as { __glossatorLoaded?: boolean };
+    if (page.__glossatorLoaded) return;
+    page.__glossatorLoaded = true;
 
     let prefs: Prefs = DEFAULT_PREFS;
     void prefsItem.getValue().then((value) => (prefs = value));
@@ -54,7 +54,7 @@ export default defineContentScript({
       hideIcon();
       closeBubble();
       const context = prefs.useSurroundingContext ? snapshot.context : null;
-      const ui = await overlay(ctx, 'glossa-bubble', (target) =>
+      const ui = await overlay(ctx, 'glossator-bubble', (target) =>
         mount(Bubble, { target, props: { text: snapshot.text, context, onclose: closeBubble } }),
       );
       bubble = ui;
@@ -67,7 +67,7 @@ export default defineContentScript({
 
     const showIcon = async (snapshot: SelectionSnapshot) => {
       hideIcon();
-      const ui = await overlay(ctx, 'glossa-selection-icon', (target) =>
+      const ui = await overlay(ctx, 'glossator-selection-icon', (target) =>
         mount(SelectionIcon, { target, props: { onactivate: () => void openBubble(snapshot) } }),
       );
       icon = ui;
@@ -75,7 +75,7 @@ export default defineContentScript({
     };
 
     browser.runtime.onMessage.addListener((message: unknown) => {
-      if (!isMessage<ShowBubbleMessage>(message, 'glossa:show-bubble')) return;
+      if (!isMessage<ShowBubbleMessage>(message, 'glossator:show-bubble')) return;
       void openBubble(snapshotSelection() ?? fallbackSnapshot(message.selectionText));
     });
 
@@ -133,7 +133,7 @@ async function overlay(
     css: tokens,
     isolateEvents: true,
     onMount: (container) => {
-      container.classList.add('glossa-theme');
+      container.classList.add('glossator-theme');
       return render(container);
     },
     onRemove: (app) => {

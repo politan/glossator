@@ -57,8 +57,8 @@ describe('streamTranslation', () => {
     expect(request?.method).toBe('POST');
     expect(request?.headers).toMatchObject({
       authorization: 'Bearer sk-or-test',
-      'http-referer': 'https://github.com/politan/glossa',
-      'x-title': 'Glossa',
+      'http-referer': 'https://github.com/politan/glossator',
+      'x-title': 'Glossator',
     });
     expect(request?.body).toMatchObject({
       model: 'tencent/hy-mt2-30b-a3b',

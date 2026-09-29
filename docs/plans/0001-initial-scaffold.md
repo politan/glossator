@@ -1,6 +1,6 @@
 # Plan 0001: initial scaffold
 
-Goal: a working Glossa v0.1 for Chromium MV3 that translates a Selection in a Bubble through either OpenRouter or a Local Provider, plus the project tooling, CI and README. Vocabulary follows [CONTEXT.md](../../CONTEXT.md); architecture follows ADRs 0001-0004.
+Goal: a working Glossator v0.1 for Chromium MV3 that translates a Selection in a Bubble through either OpenRouter or a Local Provider, plus the project tooling, CI and README. Vocabulary follows [CONTEXT.md](../../CONTEXT.md); architecture follows ADRs 0001-0004.
 
 ## Stack
 

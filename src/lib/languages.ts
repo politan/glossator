@@ -5,7 +5,7 @@ export type LanguageCode = string;
 interface LanguageInfo {
   /** Name used in prompts. */
   english: string;
-  /** Code TranslateGemma expects, when it differs from Glossa's. */
+  /** Code TranslateGemma expects, when it differs from Glossator's. */
   translateGemmaCode?: string;
 }
 
@@ -136,7 +136,7 @@ export function languageName(code: LanguageCode, uiLocale: string): string {
   return new Intl.DisplayNames([uiLocale], { type: 'language', fallback: 'code' }).of(code) ?? code;
 }
 
-/** Maps a detector result such as `pt-BR` onto a code Glossa knows, or null. */
+/** Maps a detector result such as `pt-BR` onto a code Glossator knows, or null. */
 export function normalizeDetected(code: string): LanguageCode | null {
   if (code in ALL) return code;
   const base = code.split('-')[0]?.toLowerCase() ?? '';

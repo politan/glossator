@@ -31,6 +31,6 @@ jobs:
       - run: pnpm zip
       - uses: actions/upload-artifact@v7
         with:
-          name: glossa-chrome
+          name: glossator-chrome
           path: out/*-chrome.zip
           if-no-files-found: error

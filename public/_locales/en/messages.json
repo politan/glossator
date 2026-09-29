@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Glossa"
+    "message": "Glossator"
   },
   "extDescription": {
     "message": "Translate selected text in a small bubble, with a local LLM or your own OpenRouter key."
@@ -9,10 +9,10 @@
     "message": "Translate the selected text"
   },
   "contextMenuTranslate": {
-    "message": "Translate with Glossa"
+    "message": "Translate with Glossator"
   },
   "selectionIconLabel": {
-    "message": "Translate with Glossa"
+    "message": "Translate with Glossator"
   },
   "bubbleTranslating": {
     "message": "Translating…"
@@ -51,7 +51,7 @@
     "message": "Select some text first."
   },
   "errorTooLong": {
-    "message": "The selection is too long. Glossa translates up to $LIMIT$ characters at a time.",
+    "message": "The selection is too long. Glossator translates up to $LIMIT$ characters at a time.",
     "placeholders": {
       "limit": {
         "content": "$1"
@@ -130,13 +130,13 @@
     "message": "Settings"
   },
   "settingsTitle": {
-    "message": "Glossa settings"
+    "message": "Glossator settings"
   },
   "onboardingTitle": {
     "message": "Where should translations come from?"
   },
   "onboardingIntro": {
-    "message": "Glossa has no server of its own. Pick a place to send selected text to; you can add the other one later."
+    "message": "Glossator has no server of its own. Pick a place to send selected text to; you can add the other one later."
   },
   "onboardingLocalTitle": {
     "message": "Local: most private"
@@ -157,7 +157,7 @@
     "message": "Active provider"
   },
   "sectionProviderHint": {
-    "message": "Glossa only uses the provider selected here. It never switches to the cloud on its own."
+    "message": "Glossator only uses the provider selected here. It never switches to the cloud on its own."
   },
   "providerNone": {
     "message": "None configured yet"

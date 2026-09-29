@@ -4,7 +4,7 @@ import { originRules } from './origin-rule';
 const EXTENSION_ID = 'abcdefghijklmnopabcdefghijklmnop';
 
 describe('originRules', () => {
-  it('rewrites Origin to the server itself, only for requests Glossa makes to that server', () => {
+  it('rewrites Origin to the server itself, only for requests Glossator makes to that server', () => {
     expect(originRules(['http://127.0.0.1:11434/v1'], EXTENSION_ID)).toEqual([
       {
         id: 1,

@@ -1,4 +1,4 @@
-# Glossa
+# Glossator
 
 A browser extension that translates text the user selects on a web page and shows the result next to it, using the user's own translation-model account.
 
@@ -59,7 +59,7 @@ _Avoid_: background, page context
 ### Where Translations come from
 
 **Provider**:
-A configured place Glossa sends Selections to for Translation; several can be configured but exactly one is active.
+A configured place Glossator sends Selections to for Translation; several can be configured but exactly one is active.
 _Avoid_: engine, backend, service, upstream (OpenRouter's own hosting companies are "upstreams", not Providers)
 
 **Cloud Provider**:
@@ -79,7 +79,7 @@ A specific translation model offered by a Provider and chosen by the user.
 _Avoid_: engine, LLM (on its own)
 
 **Prompt Profile**:
-The way Glossa phrases a translation request for a family of Models, picked automatically from the Model's name unless the user overrides it.
+The way Glossator phrases a translation request for a family of Models, picked automatically from the Model's name unless the user overrides it.
 _Avoid_: template, prompt style
 
 **Privacy Badge**:
@@ -91,5 +91,5 @@ The Cloud Provider setting, on by default, that only allows upstreams which neit
 _Avoid_: private mode, incognito
 
 **API Key**:
-The user's own credential for a Provider; required for a Cloud Provider, optional for a Local Provider. Glossa has no account or server of its own.
+The user's own credential for a Provider; required for a Cloud Provider, optional for a Local Provider. Glossator has no account or server of its own.
 _Avoid_: token, secret, license

@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Glossa"
+    "message": "Glossator"
   },
   "extDescription": {
     "message": "Tłumacz zaznaczony tekst w małym dymku, lokalnym modelem albo własnym kluczem OpenRouter."
@@ -9,10 +9,10 @@
     "message": "Przetłumacz zaznaczony tekst"
   },
   "contextMenuTranslate": {
-    "message": "Przetłumacz z Glossa"
+    "message": "Przetłumacz z Glossatorem"
   },
   "selectionIconLabel": {
-    "message": "Przetłumacz z Glossa"
+    "message": "Przetłumacz z Glossatorem"
   },
   "bubbleTranslating": {
     "message": "Tłumaczę…"
@@ -51,7 +51,7 @@
     "message": "Najpierw zaznacz tekst."
   },
   "errorTooLong": {
-    "message": "Zaznaczenie jest za długie. Glossa tłumaczy do $LIMIT$ znaków naraz.",
+    "message": "Zaznaczenie jest za długie. Glossator tłumaczy do $LIMIT$ znaków naraz.",
     "placeholders": {
       "limit": {
         "content": "$1"
@@ -130,13 +130,13 @@
     "message": "Ustawienia"
   },
   "settingsTitle": {
-    "message": "Ustawienia Glossa"
+    "message": "Ustawienia Glossatora"
   },
   "onboardingTitle": {
     "message": "Skąd mają pochodzić tłumaczenia?"
   },
   "onboardingIntro": {
-    "message": "Glossa nie ma własnego serwera. Wybierz, dokąd wysyłać zaznaczony tekst; drugą opcję możesz dodać później."
+    "message": "Glossator nie ma własnego serwera. Wybierz, dokąd wysyłać zaznaczony tekst; drugą opcję możesz dodać później."
   },
   "onboardingLocalTitle": {
     "message": "Lokalnie: najbardziej prywatnie"
@@ -157,7 +157,7 @@
     "message": "Aktywny provider"
   },
   "sectionProviderHint": {
-    "message": "Glossa używa tylko wybranego tutaj providera. Nigdy sama nie przełącza się na chmurę."
+    "message": "Glossator używa tylko wybranego tutaj providera. Nigdy sam nie przełącza się na chmurę."
   },
   "providerNone": {
     "message": "Jeszcze nic nie skonfigurowano"

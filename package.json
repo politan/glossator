@@ -1,5 +1,5 @@
 {
-  "name": "glossa",
+  "name": "glossator",
   "version": "0.0.0",
   "private": true,
   "description": "Translate selected text in a lightweight popup. Privacy-first: local LLMs or your own OpenRouter key, no Google.",
@@ -8,7 +8,7 @@
   "author": "politan",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/politan/glossa.git"
+    "url": "git+https://github.com/politan/glossator.git"
   },
   "packageManager": "pnpm@11.7.0",
   "engines": {

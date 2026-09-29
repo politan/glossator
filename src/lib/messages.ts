@@ -3,7 +3,7 @@ import type { LanguagePair } from './pair';
 import type { Privacy } from './providers/privacy';
 import type { TranslationErrorCode } from './translation/client';
 
-export const TRANSLATE_PORT = 'glossa:translate';
+export const TRANSLATE_PORT = 'glossator:translate';
 
 /** Sent by the Bubble over the translate port. */
 export interface TranslateRequest {
@@ -34,14 +34,14 @@ export type TranslateEvent =
 
 /** Messages the background sends to a tab's content script. */
 export interface ShowBubbleMessage {
-  type: 'glossa:show-bubble';
+  type: 'glossator:show-bubble';
   /** Selection reported by the browser, used when the page's own selection is unavailable. */
   selectionText?: string;
 }
 
 /** Messages extension pages and content scripts send to the background. */
 export interface BackgroundMessage {
-  type: 'glossa:open-settings';
+  type: 'glossator:open-settings';
 }
 
 /** Runtime messages arrive untyped; check the discriminator before trusting one. */

@@ -1,8 +1,8 @@
 export const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 export const OPENROUTER_ATTRIBUTION = {
-  'HTTP-Referer': 'https://github.com/politan/glossa',
-  'X-Title': 'Glossa',
+  'HTTP-Referer': 'https://github.com/politan/glossator',
+  'X-Title': 'Glossator',
 };
 
 // Google also operates these upstreams; open-weights Google models are routed

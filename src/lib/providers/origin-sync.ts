@@ -1,9 +1,9 @@
 import { browser, type Browser } from 'wxt/browser';
 import { originRules } from './origin-rule';
 
-/** Replaces Glossa's dynamic rules with Origin rewrites for the given Local Provider addresses. */
+/** Replaces Glossator's dynamic rules with Origin rewrites for the given Local Provider addresses. */
 export async function syncOriginRules(baseUrls: readonly string[]): Promise<void> {
-  // Glossa's own rule shape matches the API's; the API types use enums for the literals.
+  // Glossator's own rule shape matches the API's; the API types use enums for the literals.
   const rules = originRules(
     baseUrls,
     browser.runtime.id,

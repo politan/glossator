@@ -37,6 +37,6 @@ body:
   - type: input
     id: version
     attributes:
-      label: Glossa version
+      label: Glossator version
     validations:
       required: true
