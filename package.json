@@ -1,11 +1,11 @@
 {
   "name": "glossa",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "description": "Translate selected text in a lightweight popup. Privacy-first: local LLMs or your own OpenRouter key, no Google.",
   "type": "module",
   "license": "MIT",
-  "author": "Jakub Politański",
+  "author": "politan",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/politan/glossa.git"
