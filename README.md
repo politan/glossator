@@ -119,7 +119,7 @@ launchctl setenv OLLAMA_ORIGINS "chrome-extension://*"
 
 **The keyboard shortcut does nothing.** Browsers only assign a suggested shortcut when nothing else uses it. Settings shows whether one is set; if not, pick one at `brave://extensions/shortcuts` (or `chrome://extensions/shortcuts`).
 
-**LM Studio does not answer.** Turn on **Enable CORS** in LM Studio's server settings.
+**LM Studio does not answer.** The app can be open while its API server is off. Start it in the **Developer** tab or run `lms server start`. Glossator does not need **Enable CORS**; keep it off, since with it any website you visit can use your model.
 
 **The first translation takes long.** Local servers load the model into memory on first use. Glossator waits up to two minutes and shows _Loading model…_ meanwhile.
 
