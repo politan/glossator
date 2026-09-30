@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/politan/glossator/compare/v0.2.0...v0.2.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* save the active provider chosen in Settings ([#8](https://github.com/politan/glossator/issues/8)) ([efc882b](https://github.com/politan/glossator/commit/efc882b1f204d5dc0d39dd0fca7d25b6843d5a88))
+* stop advising CORS for LM Studio ([#7](https://github.com/politan/glossator/issues/7)) ([6d946de](https://github.com/politan/glossator/commit/6d946de7d5136a28c9045de7ac55e43f17550e4e))
+
 ## [0.2.0](https://github.com/politan/glossator/compare/v0.1.0...v0.2.0) (2026-09-29)
 
 
