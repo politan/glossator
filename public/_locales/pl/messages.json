@@ -274,7 +274,7 @@
     "message": "Działa bez dodatkowej konfiguracji."
   },
   "presetLmStudioHint": {
-    "message": "Włącz \"Enable CORS\" w ustawieniach serwera LM Studio."
+    "message": "Uruchom serwer w zakładce Developer w LM Studio albo poleceniem lms server start. CORS nie jest potrzebny; zostaw go wyłączonego, żeby strony nie mogły korzystać z Twojego modelu."
   },
   "presetLlamaCppHint": {
     "message": "Uruchom llama-server z modelem, którego chcesz używać."
