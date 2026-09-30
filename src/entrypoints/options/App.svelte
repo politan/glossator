@@ -88,6 +88,12 @@
     });
   }
 
+  // Takes the id rather than the event: the save runs after an await, when the
+  // browser has already cleared event.currentTarget.
+  function chooseProvider(id: string) {
+    return saveSettings((current) => ({ ...current, activeProviderId: id }));
+  }
+
   function updateCloud(change: Partial<CloudProvider>, setUp?: string) {
     return saveSettings(
       (current) => ({ ...current, cloud: { ...current.cloud, ...change } }),
@@ -208,8 +214,7 @@
     {#if choices.length > 0}
       <select
         value={settings.activeProviderId}
-        onchange={(e) =>
-          saveSettings((current) => ({ ...current, activeProviderId: e.currentTarget.value }))}
+        onchange={(e) => chooseProvider(e.currentTarget.value)}
       >
         {#each choices as choice (choice.id)}
           <option value={choice.id}>{choice.label}</option>
